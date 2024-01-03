@@ -1,0 +1,15 @@
+# 👋👋👋
+
+This repository is the textual content of my personal website, [goulven-clech.dev](https://goulven-clech.dev). More information in the [website repository](https://github.com/goulvenclech/goulven-clech.dev).
+
+The source code is provided under the [0BSD license](https://spdx.org/licenses/0BSD.html), attribution is appreciated but not required. The blog textual content is provided under the [CC BY 4.0 Deed](https://spdx.org/licenses/CC-BY-4.0.html), attribution is required. But for both, you are free to use, copy, modify, and/or distribute for any purpose, commercial or personal.
+
+Some articles may cite text, images or resources from external sources: their original licenses apply, and I indicate the authors if known.
+
+## Contributing
+
+Most of my blog entries express my personal views or experiences, so I don't expect any contribution to their content. But if you find a typo or a factual/ technical mistake, feel free to open an issue or a pull request, it will be appreciated 🙂
+
+## MDX Components
+
+I use [MDX](https://mdxjs.com/) and [Astro Components](https://docs.astro.build/en/core-concepts/astro-components/) to write my blog entries. If you want more information on a component, each of them is well commented and (I hope) easy to understand, please refer to the [source code](https://github.com/goulvenclech/goulven-clech.dev/tree/master/src/components).
