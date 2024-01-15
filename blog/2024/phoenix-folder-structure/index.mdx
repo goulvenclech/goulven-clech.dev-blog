@@ -11,8 +11,284 @@ image_alt: "Astro logo on a colorful background"
 image_caption: "A young british developer, trying to find a file in his new company's project."
 icon: "🗂️"
 abstract: "How do you organize an Elixir/Phoenix directory structure to scale? A real case study on a real-estate start-up."
+display_abstract: true
+display_cover: true
+display_toc: true
 draft: true
 hidden: false
 ---
 
-Blabla
+import HiddenH3 from "$components/hidden/HiddenH3.astro"
+import Asterism from "$components/typography/Asterism.astro"
+export const components = {h3: HiddenH3}
+
+## What's the problem?
+
+On [its doc](https://hexdocs.pm/phoenix/directory_structure.html), Phoenix recommends a very simple directory structure, mainly to start with and mainly for the front end.
+
+Why it took so long -> At the start of the start-up, and after the departure of the company's first dev, I remained alone for a long time with difficulty recruiting. A work-study student and a web integrator joined the team, and sometimes we worked with freelancers, but without other developers and not having that much experience, I tried to keep the initial philosophy of the project as long as possible.
+-> This is one of the first big decisions I made, and I wanted to make it right. 
+
+*Inconsistent folder structures*
+
+```
+encheres_immo/
+    [...config files]
+    
+    - accounts.ex (multi-schemas context)
+    - accounts/
+        - user.ex (child schema)
+        - organization.ex (child schema)
+        - [...utilis]
+        
+    - auctions.ex (context)
+    - auctions/
+        - projections/
+            - auction.ex (schema)
+        - currency.ex (child schema)
+        - [...utilis]
+
+    - contacts/
+        - contacts.ex (context)
+        - contact.ex (schema)
+        - [...utilis]
+```
+
+Three context examples, all with different structures. Making the overall file very complex to understand.
+
+Additionally, some of these structures simply don't work. For example, the context `accounts.ex` includes both functions involving multiple child schemas, and functions that should be in a context specific to each of these child schemas. The result is an abnormally long file, with a messy organization.
+
+*Many files of different natures at the folder root*
+
+<img width="220" alt="image" src="https://github.com/encheres-immo/encheres_immo/assets/35667800/15dfee5f-cc34-4e0b-8cd5-cfacf95ec9b1" />
+
+Among these files, some are config files (`repo.ex`, `schema.ex`), others are files necessary for the operation of the lib (`application.ex`, `release.ex`), others are context files whose schemas and utils are in folders higher (`auctions.ex`, `accounts.ex`, etc), one is a schema (`faq.ex`), one is a utils file (`asset_store.ex`), and finally there is an Oban job (`check_oban_consitency.ex`).
+
+Both the number of files present and their diversity make reading and understanding this file difficult.
+
+
+## Main considerations
+
+Flexible and versatile -> Should cover all existing features, and all future ones. Also, some small subfeatures are meant to scale and become bigger ones, so we should be able to move them easily.
+
+What is conceived well is expressed clearly -> Should be easy to document, and therefore easy to understand and to enforce.
+
+Development policies -> involve as much as possible the other developer, to benefit from his experience and to make sure we are both on the same page. -> have the whole debate in writing et in the Github repo, to be able to come back to it later. And document the final decision in the repository.
+
+## Three errors to avoid
+
+We made several proposals before finding the right one. Some were deliberately radical in their direction, and helped us to identify wrong directions.
+
+### Nesting hell
+
+Here is our first proposal, inspired by [this article](https://dev.to/pedromtavares/blazing-with-phoenix-project-structure-463l), with personal modifications. Each features is in a folder, insine its parent feature, and so on. So the folder structure follows the data hierarchy. 
+
+```
+encheres_immo/
+    [...config files]
+    
+    - accounts/
+        - accounts.ex (multi-schema context) 
+        
+        - organizations/
+            - organizations.ex (context)
+            - organization.ex (schema)
+            - [...utilis]
+            - formulas/
+                - formulas.ex (child context)
+                - formula.ex (child schema)
+            - [...others child folders]
+    
+        - users/
+            - users.ex (context)
+            - user.ex (schema)
+            - [...utilis]
+            - [...child folders]
+```
+
+**Pro:** 
+- fewer files at the root
+- coherent structures everywhere
+- folder structure represents schema relations
+- allow multi-schema context if necessary (see bellow)
+- module names represent schema relations:
+```
+EncheresImmo.Accounts.Organizations.Formulas.Formula
+Lib > Parent > Parent > Context > Schema
+```
+
+**Cons:**
+- more and more folders nested inside folders, can result in hard-to-reach deep nested files
+- what about complex relations between schemas? Like Users that sometimes belong to Orgs, or `many-to-many`
+ tables?
+- module names are longer and difficult to guess: `EncheresImmo.Accounts.Organizations.PaiementInfos.Cards.Card`
+
+### Scrolling hell
+
+<Asterism />
+
+Proposed by myself, and tested on a personal test project:
+
+```
+encheres_immo/
+    [...config files]
+    
+    - organizations/
+        - users.ex (context)
+        - user.ex (schema)
+        - [...utilis]
+    
+    - users/
+        - users.ex (context)
+        - user.ex (schema)
+        - [...utilis]
+```
+
+**Pro:** 
+- fewer files at the root
+- coherent structures everywhere
+- easy to read and understand: every schema has its folder with context/schema/utils
+- module names are easy to guess:
+```
+EncheresImmo.Users.User
+Lib -> Context -> Schema
+```
+
+**Cons:**
+- more and more folders at the root of `lib/encheres_immo`, with no differences between central and important schemas and little child schemas.
+- folders structure doesn't represent schema relations
+- module name doesn't represent schema relations
+
+### Messy hell
+
+<Asterism />
+
+Proposed by the other developer, not tested :
+
+```
+encheres_immo/
+    - accounts/
+        accounts.ex
+        user.ex
+        organization.ex
+        utils/
+            [...utils]
+
+    - auctions/
+        auctions.ex
+        auction.ex
+        currency.ex
+        utils/
+            [...utils]
+
+    - contacts/
+        contacts.ex
+        contact.ex
+        utils/
+            [...utils]
+```
+
+Pros:
+  -  Even simpler than previous solutions.
+  -  Good for situations where the primary distinction is just between contexts and utility functions.
+  
+Cons:
+  - The distinction between contexts and schemas isn't as explicit, which might be slightly less intuitive for new developers.
+  - I don't think there is a good reason for a multi-schemas context like `Accounts`. Looking at our code, I think there would only be functions that should be in a specific context, or functions that are bad practices.
+  - This solution do not distinguish schemas/contexts which belong to larger features. In the case of `organization`, with multiple sub schemas/contexts, that could lead either to a messy folder : 
+
+  ```
+  encheres_immo/
+      - accounts/
+          accounts.ex
+          custom_themes.ex
+          formulas.ex
+          paiement_infos.ex
+          [...]
+          schemas/
+              organization.ex
+              user.ex
+              custom_theme.ex
+              formula.ex
+              paiement_info.ex
+              [...]
+          utils/
+              [...utils]
+  ```
+
+
+## Our final proposal
+
+
+Not the miracle solution, but I think I found one halfway of all our solutions:
+
+```
+encheres_immo/
+├─ organizations/ <- a folder for each feature
+│    ├─ organizations.ex <- context 
+│    ├─ organization.ex <- schema & changesets
+│    ├─ ? - utils/ <- utils folder
+│    │       └─ [... utils].ex <- utils files 
+│    └─ ? -  formula/ <- subfolder for each child feature
+│            ├─ formula.ex <- child schema & changesets
+│            ├─ ? - formulas.ex <- child context 
+│            └─ ? - [... utils] <- child utils 
+[...]
+├─ application.ex <- app life cycle
+├─ release.ex <- utils for migrations and seeding
+└─ [... repo related files]
+```
+
+"Feature" is a data structure (example: `user`), with a schema (and changesets), a context (functions to create/ use/ modify/ delete it), utils (optional - additional functions, boilerplates, templates, or behaviours), and child features (optional - embed or small tables).
+
+"Child feature" is a simple schema/ embed (example: `formula`) with few to none context functions, and few to none utils. A child feature can't have a child feature itself. If a child feature grows into a feature, we should transfer it to its own folder. 
+
+**Pros:**
+
+- Easy to document (1 schema & 2 paragraphs) and understand (I think)
+- Can be applied to most of our existing code (I'm currently trying on a branch)
+- Limit folder nesting
+
+**Cons:**
+
+- Will eventually lead to a lot of folders at the root (more than B & C & D), but slower than A.
+- Imply folder structure modification every time a child feature becomes a feature, which should be rare.
+
+### About test files
+
+<Asterism />
+
+To respect legacy code and documention, we will keep a `test` folder at the root of the project, with a `test_helper.exs`.
+
+-> Not the solution I would have chosen, but I think it's the best compromise between respecting the existing code and making it evolve.
+-> In my personal project, I will try to move a test file in the folder of each feature, and see if it's possible to make it work.
+
+## About the decision process
+
+As I said in the introduction, this is one of the first big decision I have taken as a tech lead. -> It was also an opportunity for me to try to formalize my decision process, and to try to involve the other developer as much as possible.
+
+### How did we discuss it?
+
+Of course, some discussion happened in meetings, but I wanted to keep a written trace of it, so I created an issue on Github, and we discussed it in the comments.
+-> Issues are stored in the repository, and can be easily found and read by anyone.
+-> Comments are written, so we can take the time to think about what we want to say, and to formulate it clearly.
+-> You can see the process and the evolution of the discussion, and how we came to the final decision.
+
+It took us a few days to discuss it, and we had to make a few changes to the proposal, but I think it was worth it.
+-> Meetings wouldn't have been faster, would not have involved everyone as much, and therefore the final decision would have been less known to everyone.
+
+### How did we document it?
+
+<Asterism />
+
+At the end of the discussion, we have to write down the final decision, and to document it.
+-> Added in the `README.md` with a schema, and a few paragraphs.
+
+In retrospect, I think it whould have been better to :
+-> Open a PR with the final decision, and to discuss it in the comments and code review.
+-> Allow others devs to comment on the PR, and to propose their changes to the documentation.
+-> Have a file in `docs/` with the final decision, with more details.
+
+## What I learned
+
+Blabla.
