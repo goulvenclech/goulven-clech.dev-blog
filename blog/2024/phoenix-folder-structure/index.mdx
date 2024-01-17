@@ -8,7 +8,7 @@ tags:
   - "devops"
 image: "./phoenix_cover.jpg"
 image_alt: "Astro logo on a colorful background"
-image_caption: "A young british developer, trying to find a file in his new company's project."
+image_caption: "A young british developer, trying to find a file in his project."
 icon: "🗂️"
 abstract: "How do you organize an Elixir/Phoenix directory structure to scale? A real case study on a real-estate start-up."
 display_abstract: true
@@ -24,37 +24,47 @@ export const components = {h3: HiddenH3}
 
 ## What's the problem?
 
-On [its doc](https://hexdocs.pm/phoenix/directory_structure.html), Phoenix recommends a very simple directory structure, mainly to start with and mainly for the front end.
+The Phoenix documentation offers a [directory structure example](https://hexdocs.pm/phoenix/directory_structure.html) for new projects, mainly detailed for the front-end part.
 
-Why it took so long -> At the start of the start-up, and after the departure of the company's first dev, I remained alone for a long time with difficulty recruiting. A work-study student and a web integrator joined the team, and sometimes we worked with freelancers, but without other developers and not having that much experience, I tried to keep the initial philosophy of the project as long as possible.
--> This is one of the first big decisions I made, and I wanted to make it right. 
+But our tiny [real-estate start-up]() has grown over three years, with different developers and new features. Sadly, our back-end directory structure hasn't evolved with it and has become a mess.
 
-*Inconsistent folder structures*
+To be honest, I am extensively to blame for this situation. After the departure of the company's first developer, I remained alone as a junior developer. Intending to recruit another CTO, I kept the initial philosophy of the project as long as possible, and delayed essential architectural decisions.
+
+Even when the recruitment difficulty became apparent, I took a while before stepping up as the tech lead. I suffered through the situation, which seemed beyond my control to me. When we compensated with freelancers/ interns, I didn't dare nor know how to manage them correctly, leading to less coherent or qualitative code.
+
+Today, the situation is different, as I gradually regained control of the project and built my confidence. I have built a team of five people, including three software developers, destined to grow. And now, it is time to re-organize our project.
+
+<Asterism />
+
+Let's consider an extract of the old structure : 
 
 ```
 encheres_immo/
     [...config files]
     
-    - accounts.ex (multi-schemas context)
+    - accounts.ex <- multi-schemas context
     - accounts/
-        - user.ex (child schema)
-        - organization.ex (child schema)
+        - user.ex <- schema
+        - organization.ex <- schema
+        - formula/ 
+            - formulas.ex <- child context
+            - formula.ex <- child schema
         - [...utilis]
         
-    - auctions.ex (context)
+    - auctions.ex <- context
     - auctions/
         - projections/
-            - auction.ex (schema)
-        - currency.ex (child schema)
+            - auction.ex <- schema
+        - currency.ex <- child schema
         - [...utilis]
 
     - contacts/
-        - contacts.ex (context)
-        - contact.ex (schema)
+        - contacts.ex <- context
+        - contact.ex <- schema
         - [...utilis]
 ```
 
-Three context examples, all with different structures. Making the overall file very complex to understand.
+If we can identify three contexts in this example (`accounts`, `auctions`, and `contacts`), their inconsistent structure makes the whole project hard to understand.
 
 Additionally, some of these structures simply don't work. For example, the context `accounts.ex` includes both functions involving multiple child schemas, and functions that should be in a context specific to each of these child schemas. The result is an abnormally long file, with a messy organization.
 
