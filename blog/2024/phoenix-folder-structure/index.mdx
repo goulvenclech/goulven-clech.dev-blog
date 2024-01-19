@@ -14,13 +14,13 @@ abstract: "How do you organize an Elixir/Phoenix directory structure to scale? A
 display_abstract: true
 display_cover: true
 display_toc: true
-draft: true
-hidden: false
+published: "1.3.0"
 ---
 
 import HiddenH3 from "$components/hidden/HiddenH3.astro"
 import Asterism from "$components/typography/Asterism.astro"
 export const components = {h3: HiddenH3}
+
 
 ## What's the problem?
 
@@ -30,9 +30,11 @@ But our tiny [real-estate start-up]() has grown over three years, with different
 
 To be honest, I am extensively to blame for this situation. After the departure of the company's first developer, I remained alone as a junior developer. Intending to recruit another CTO, I kept the initial philosophy of the project as long as possible, and delayed essential architectural decisions.
 
-Even when the recruitment difficulty became apparent, I took a while before stepping up as the tech lead. I suffered through the situation, which seemed beyond my control to me. When we compensated with freelancers/ interns, I didn't dare nor know how to manage them correctly, leading to less coherent or qualitative code.
+Even when the recruitment difficulty became apparent, I took a while before stepping up as the tech lead. I suffered through the situation, which seemed beyond my control. When we compensated with freelancers/ interns, I didn't dare nor know how to manage them correctly, leading to less coherent or qualitative code.
 
 Today, the situation is different, as I gradually regained control of the project and built my confidence. I have built a team of five people, including three software developers, destined to grow. And now, it is time to re-organize our project.
+
+### Inconsistent structures
 
 <Asterism />
 
@@ -46,9 +48,7 @@ encheres_immo/
     - accounts/
         - user.ex <- schema
         - organization.ex <- schema
-        - formula/ 
-            - formulas.ex <- child context
-            - formula.ex <- child schema
+        - formula.ex <- child schema
         - [...utilis]
         
     - auctions.ex <- context
@@ -66,7 +66,17 @@ encheres_immo/
 
 If we can identify three contexts in this example (`accounts`, `auctions`, and `contacts`), their inconsistent structure makes the whole project hard to understand.
 
-Additionally, some of these structures simply don't work. For example, the context `accounts.ex` includes both functions involving multiple child schemas, and functions that should be in a context specific to each of these child schemas. The result is an abnormally long file, with a messy organization.
+Additionally, some of these structures simply don't work. For example, instead of `users` and `organizations` context with their related functions, we have an abnormally long and messy `accounts.ex`. Worse, schemas file `user.ex` and `organization.ex` contain some functions that should also be in context.
+
+This situation arose from poorly documented personal logic, followed by various developers interpreting it in their way. We can guess the origin of some problems: 
+1. The first developer wanted to conveniently group accounts' functions, but their number made this file unreadable.  
+2. Another developer (maybe me) wanted to reduce this file by putting the simplest functions with their schema, making unclear if a function should be in the context or with the the schema.
+3. With an absurdly big "accounts" folder next to a small "contacts" folder, it's now unclear when a feature should have its folder. This decision became at the discretion of each developer.
+4. Let that sink for a few years and Ta-da!  
+
+### Various files at the root
+
+<Asterism />
 
 *Many files of different natures at the folder root*
 
