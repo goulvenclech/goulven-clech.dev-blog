@@ -49,19 +49,19 @@ encheres_immo/
         - user.ex <- schema
         - organization.ex <- schema
         - formula.ex <- child schema
-        - [...utilis]
+        - [...utils]
         
     - auctions.ex <- context
     - auctions/
         - projections/
             - auction.ex <- schema
         - currency.ex <- child schema
-        - [...utilis]
+        - [...utils]
 
     - contacts/
         - contacts.ex <- context
         - contact.ex <- schema
-        - [...utilis]
+        - [...utils]
 ```
 
 If we can identify three contexts in this example (`accounts`, `auctions`, and `contacts`), their inconsistent structure makes the whole project hard to understand.
@@ -74,34 +74,24 @@ This situation arose from poorly documented personal logic, followed by various 
 3. With an absurdly big "accounts" folder next to a small "contacts" folder, it's now unclear when a feature should have its folder. This decision became at the discretion of each developer.
 4. Let that sink for a few years and Ta-da!  
 
-### Various files at the root
-
-<Asterism />
-
-*Many files of different natures at the folder root*
-
-<img width="220" alt="image" src="https://github.com/encheres-immo/encheres_immo/assets/35667800/15dfee5f-cc34-4e0b-8cd5-cfacf95ec9b1" />
-
-Among these files, some are config files (`repo.ex`, `schema.ex`), others are files necessary for the operation of the lib (`application.ex`, `release.ex`), others are context files whose schemas and utils are in folders higher (`auctions.ex`, `accounts.ex`, etc), one is a schema (`faq.ex`), one is a utils file (`asset_store.ex`), and finally there is an Oban job (`check_oban_consitency.ex`).
-
-Both the number of files present and their diversity make reading and understanding this file difficult.
-
 
 ## Main considerations
 
-Flexible and versatile -> Should cover all existing features, and all future ones. Also, some small subfeatures are meant to scale and become bigger ones, so we should be able to move them easily.
+Before starting to iterate, I knew my solution must address several considerations.
 
-What is conceived well is expressed clearly -> Should be easy to document, and therefore easy to understand and to enforce.
+First, our system should be versatile enough to cover all existing and future features, while remaining consistent. It should also allow scaling small subfeatures into larger ones.
 
-Development policies -> involve as much as possible the other developer, to benefit from his experience and to make sure we are both on the same page. -> have the whole debate in writing et in the Github repo, to be able to come back to it later. And document the final decision in the repository.
+Second, "What is conceived well is expressed clearly". If good readability and consistency are the main objectives, this should make our solution easy to document and, therefore, easy to enforce. A few paragraphs explaining key concepts and a structure diagram should be enough.
+
+Finally, I want to involve the current team as much as possible in decision-making. This approach will not only lead to a better solution but also ensure that the entire team is familiar with the solution, making it easier to implement initially.
 
 ## Three errors to avoid
 
-We made several proposals before finding the right one. Some were deliberately radical in their direction, and helped us to identify wrong directions.
+We made several iterations before finding the right one. Some were deliberately radical and helped us to identify wrong directions.
 
 ### Nesting hell
 
-Here is our first proposal, inspired by [this article](https://dev.to/pedromtavares/blazing-with-phoenix-project-structure-463l), with personal modifications. Each features is in a folder, insine its parent feature, and so on. So the folder structure follows the data hierarchy. 
+Here is our initial proposal based on [this article](https://dev.to/pedromtavares/blazing-with-phoenix-project-structure-463l), with some personal modifications. Each feature is in a folder, inside its parent feature, and so on, following the schema relations.
 
 ```
 encheres_immo/
@@ -113,41 +103,35 @@ encheres_immo/
         - organizations/
             - organizations.ex (context)
             - organization.ex (schema)
-            - [...utilis]
+            - [...utils]
             - formulas/
                 - formulas.ex (child context)
                 - formula.ex (child schema)
-            - [...others child folders]
+            - [...other child folders]
     
         - users/
             - users.ex (context)
             - user.ex (schema)
-            - [...utilis]
+            - [...utils]
             - [...child folders]
 ```
 
-**Pro:** 
-- fewer files at the root
-- coherent structures everywhere
-- folder structure represents schema relations
-- allow multi-schema context if necessary (see bellow)
-- module names represent schema relations:
+This solution has several advantages:  fewer files at the root, coherent structures throughout, and allowing multi-schema contexts (if necessary). Also, module names follow schema relations:
+
 ```
 EncheresImmo.Accounts.Organizations.Formulas.Formula
 Lib > Parent > Parent > Context > Schema
 ```
 
-**Cons:**
-- more and more folders nested inside folders, can result in hard-to-reach deep nested files
-- what about complex relations between schemas? Like Users that sometimes belong to Orgs, or `many-to-many`
- tables?
-- module names are longer and difficult to guess: `EncheresImmo.Accounts.Organizations.PaiementInfos.Cards.Card`
+One of the downsides of this solution is that it may result in more and more folders nested inside folders, making it challenging to access deeply nested files. With time, module names will be longer and harder to guess, such as : `EncheresImmo.Accounts.Organizations.PaymentInfos.Cards.Card`.
+
+Finally, complex relations like `Users`-`Orgs` or many-to-many tables can be tricky to represent as a nested hierarchy.
 
 ### Scrolling hell
 
 <Asterism />
 
-Proposed by myself, and tested on a personal test project:
+For thought, we can try the opposite approach:
 
 ```
 encheres_immo/
@@ -156,28 +140,26 @@ encheres_immo/
     - organizations/
         - users.ex (context)
         - user.ex (schema)
-        - [...utilis]
+        - [...utils]
+
+    - formulas/
+        - formulas.ex (child context)
+        - formula.ex (child schema)
     
     - users/
         - users.ex (context)
         - user.ex (schema)
-        - [...utilis]
+        - [...utils]
 ```
 
-**Pro:** 
-- fewer files at the root
-- coherent structures everywhere
-- easy to read and understand: every schema has its folder with context/schema/utils
-- module names are easy to guess:
+Like the previous solution, we clean files at the root and get a coherent structure throughout. But this time, every schema has its folder with context/schema/utils, making module names easy to guess.
+
 ```
 EncheresImmo.Users.User
 Lib -> Context -> Schema
 ```
 
-**Cons:**
-- more and more folders at the root of `lib/encheres_immo`, with no differences between central and important schemas and little child schemas.
-- folders structure doesn't represent schema relations
-- module name doesn't represent schema relations
+However, there are drawbacks to this solution, including a potentially large number of folders at the root level, with no clear distinction between the central feature and the small sub-feature. Also, folder structure and module names do not represent schema relations. 
 
 ### Messy hell
 
@@ -223,14 +205,14 @@ Cons:
           accounts.ex
           custom_themes.ex
           formulas.ex
-          paiement_infos.ex
+          payment_infos.ex
           [...]
           schemas/
               organization.ex
               user.ex
               custom_theme.ex
               formula.ex
-              paiement_info.ex
+              payment_info.ex
               [...]
           utils/
               [...utils]
@@ -285,17 +267,15 @@ To respect legacy code and documention, we will keep a `test` folder at the root
 
 ## About the decision process
 
-As I said in the introduction, this is one of the first big decision I have taken as a tech lead. -> It was also an opportunity for me to try to formalize my decision process, and to try to involve the other developer as much as possible.
+As I said in the introduction, this is one of my first big decisions as a tech lead. I wanted to involve the team in the process, not only to make a better decision or for democratic management, but also to reassure myself.
 
 ### How did we discuss it?
 
-Of course, some discussion happened in meetings, but I wanted to keep a written trace of it, so I created an issue on Github, and we discussed it in the comments.
--> Issues are stored in the repository, and can be easily found and read by anyone.
--> Comments are written, so we can take the time to think about what we want to say, and to formulate it clearly.
--> You can see the process and the evolution of the discussion, and how we came to the final decision.
+It was also the first opportunity to formalize my decision process, and I knew that writing would play a central part. Of course, some discussions happened in meetings, but I tried to keep a written trace of it, so I created a Github Issue. 
 
-It took us a few days to discuss it, and we had to make a few changes to the proposal, but I think it was worth it.
--> Meetings wouldn't have been faster, would not have involved everyone as much, and therefore the final decision would have been less known to everyone.
+There are multiple benefits in using GitHub Issues. Firstly, these issues are stored in the repository, making them easily accessible. Additionally, writing allows us to express our thoughts clearly, illustrate them with examples, and review proposals from others. By doing so, we can see the progression of the discussion and how we reached the final decision.
+
+We took a few days to discuss the proposal and make the necessary changes, but the effort paid off. By involving everyone, we made a more informed decision that everyone knows about. More oral meetings or rushing the decision alone would not have saved time in the long run.
 
 ### How did we document it?
 
