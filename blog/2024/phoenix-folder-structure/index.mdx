@@ -30,7 +30,7 @@ But our tiny [real-estate start-up]() has grown over three years, with different
 
 To be honest, I am extensively to blame for this situation. After the departure of the company's first developer, I remained alone as a junior developer. Intending to recruit another CTO, I kept the initial philosophy of the project as long as possible, and delayed essential architectural decisions.
 
-Even when the recruitment difficulty became apparent, I took a while before stepping up as the tech lead. I suffered through the situation, which seemed beyond my control. When we compensated with freelancers/ interns, I didn't dare nor know how to manage them correctly, leading to less coherent or qualitative code.
+Even when the recruitment difficulty became apparent, I took a while before stepping up as the tech lead. I suffered through the situation, which seemed beyond my control. And when we compensated with freelancers/ interns, I didn't dare nor know how to manage them correctly, leading to less coherent or qualitative code.
 
 Today, the situation is different, as I gradually regained control of the project and built my confidence. I have built a team of five people, including three software developers, destined to grow. And now, it is time to re-organize our project.
 
@@ -42,26 +42,27 @@ Let's consider an extract of the old structure :
 
 ```
 encheres_immo/
-    [...config files]
-    
-    - accounts.ex <- multi-schemas context
-    - accounts/
-        - user.ex <- schema
-        - organization.ex <- schema
-        - formula.ex <- child schema
-        - [...utils]
-        
-    - auctions.ex <- context
-    - auctions/
-        - projections/
-            - auction.ex <- schema
-        - currency.ex <- child schema
-        - [...utils]
-
-    - contacts/
-        - contacts.ex <- context
-        - contact.ex <- schema
-        - [...utils]
+├─ accounts.ex <- multi-schemas context
+├─ accounts/
+│    ├─ user.ex <- schema
+│    ├─ organization.ex <- schema
+│    ├─ formula.ex <- child schema
+│    └─ [... utils]
+├─ auctions.ex <- context
+├─ auctions/
+│    ├─ projections/
+│    │    ├─ auction.ex <- schema
+│    │    └─ [... utils]
+│    ├─ currency.ex <- child schema
+│    └─ [... utils]
+├─ contacts/
+│    ├─ contacts.ex <- context
+│    ├─ contact.ex <- schema
+│    └─ [... utils]
+[...]
+├─ application.ex <- app life cycle
+├─ release.ex <- utils for migrations and seeding
+└─ [... repo related files]
 ```
 
 If we can identify three contexts in this example (`accounts`, `auctions`, and `contacts`), their inconsistent structure makes the whole project hard to understand.
@@ -95,25 +96,23 @@ Here is our initial proposal based on [this article](https://dev.to/pedromtavare
 
 ```
 encheres_immo/
-    [...config files]
-    
-    - accounts/
-        - accounts.ex (multi-schema context) 
-        
-        - organizations/
-            - organizations.ex (context)
-            - organization.ex (schema)
-            - [...utils]
-            - formulas/
-                - formulas.ex (child context)
-                - formula.ex (child schema)
-            - [...other child folders]
-    
-        - users/
-            - users.ex (context)
-            - user.ex (schema)
-            - [...utils]
-            - [...child folders]
+├─ accounts/
+│    ├─ accounts.ex <- multi-schemas context
+│    ├─ organizations/
+│    │    ├─ organizations.ex <- context
+│    │    ├─ organization.ex <- schema
+│    │    ├─ formulas/
+│    │    │    ├─ formulas.ex <- child context
+│    │    │    └─ formula.ex <- child schema
+│    │    └─ [... other child folders]
+│    └─ users/
+│         ├─ users.ex <- context
+│         ├─ user.ex <- schema
+│         └─ [... other child folders]
+[...]
+├─ application.ex <- app life cycle
+├─ release.ex <- utils for migrations and seeding
+└─ [... repo related files]
 ```
 
 This solution has several advantages:  fewer files at the root, coherent structures throughout, and allowing multi-schema contexts (if necessary). Also, module names follow schema relations:
@@ -135,21 +134,21 @@ For thought, we can try the opposite approach:
 
 ```
 encheres_immo/
-    [...config files]
-    
-    - organizations/
-        - users.ex (context)
-        - user.ex (schema)
-        - [...utils]
-
-    - formulas/
-        - formulas.ex (child context)
-        - formula.ex (child schema)
-    
-    - users/
-        - users.ex (context)
-        - user.ex (schema)
-        - [...utils]
+├─ organizations/
+│    ├─ organizations.ex <- context
+│    ├─ organization.ex <- schema
+│    └─ [... utils]
+├─ formulas/
+│    ├─ formulas.ex <- context
+│    └─ formula.ex <- schema
+├─ users/
+│    ├─ users.ex <- context
+│    ├─ user.ex <- schema
+│    └─ [... utils]
+[...]
+├─ application.ex <- app life cycle
+├─ release.ex <- utils for migrations and seeding
+└─ [... repo related files]
 ```
 
 Like the previous solution, we clean files at the root and get a coherent structure throughout. But this time, every schema has its folder with context/schema/utils, making module names easy to guess.
@@ -169,58 +168,54 @@ Proposed by the other developer, not tested :
 
 ```
 encheres_immo/
-    - accounts/
-        accounts.ex
-        user.ex
-        organization.ex
-        utils/
-            [...utils]
-
-    - auctions/
-        auctions.ex
-        auction.ex
-        currency.ex
-        utils/
-            [...utils]
-
-    - contacts/
-        contacts.ex
-        contact.ex
-        utils/
-            [...utils]
+├─ accounts/
+│    ├─ accounts.ex <- multi-schemas context
+│    ├─ custom_themes.ex <- context
+│    ├─ schema/
+│    │    ├─ organization.ex <- schema
+│    │    ├─ user.ex <- schema
+│    │    ├─ custom_theme.ex <- schema
+│    │    └─ [... other schemas]
+│    └─ [... utils]
+├─ contacts/
+│    ├─ contacts.ex <- context
+│    ├─ schema/
+│    │    └─ contact.ex <- schema
+│    └─ [... utils]
+[...]
+├─ application.ex <- app life cycle
+├─ release.ex <- utils for migrations and seeding
+└─ [... repo related files]
 ```
 
 Pros:
-  -  Even simpler than previous solutions.
-  -  Good for situations where the primary distinction is just between contexts and utility functions.
+  - Good for situations where the primary distinction is just between contexts and utility functions.
+  - Less folders at the root than B, and less nesting than A.
   
 Cons:
   - The distinction between contexts and schemas isn't as explicit, which might be slightly less intuitive for new developers.
   - I don't think there is a good reason for a multi-schemas context like `Accounts`. Looking at our code, I think there would only be functions that should be in a specific context, or functions that are bad practices.
   - This solution do not distinguish schemas/contexts which belong to larger features. In the case of `organization`, with multiple sub schemas/contexts, that could lead either to a messy folder : 
 
-  ```
-  encheres_immo/
-      - accounts/
-          accounts.ex
-          custom_themes.ex
-          formulas.ex
-          payment_infos.ex
-          [...]
-          schemas/
-              organization.ex
-              user.ex
-              custom_theme.ex
-              formula.ex
-              payment_info.ex
-              [...]
-          utils/
-              [...utils]
-  ```
-
+```
+encheres_immo/
+├─ accounts/
+│    ├─ accounts.ex <- multi-schemas context
+│    ├─ custom_themes.ex <- context
+│    ├─ formulas.ex <- context
+│    ├─ payment_infos.ex <- context
+│    ├─ [... other contexts]
+│    ├─ schema/
+│    │    ├─ organization.ex <- schema
+│    │    ├─ custom_theme.ex <- schema
+│    │    ├─ formula.ex <- schema
+│    │    ├─ payment_info.ex <- schema
+│    │    └─ [... other schemas]
+│    └─ [... utils]
+[...]
+```
 
 ## Our final proposal
-
 
 Not the miracle solution, but I think I found one halfway of all our solutions:
 
