@@ -69,7 +69,7 @@ If we can identify three contexts in this example (`accounts`, `auctions`, and `
 
 Additionally, some of these structures simply don't work. For example, instead of `users` and `organizations` context with their related functions, we have an abnormally long and messy `accounts.ex`. Worse, schemas file `user.ex` and `organization.ex` contain some functions that should also be in context.
 
-This situation arose from poorly documented personal logic, followed by various developers interpreting it in their way. We can guess the origin of some problems: 
+This situation arose from poorly documented personal logic, followed by various developers interpreting it in their own way. We can guess the origin of some problems: 
 1. The first developer wanted to conveniently group accounts' functions, but their number made this file unreadable.  
 2. Another developer (maybe me) wanted to reduce this file by putting the simplest functions with their schema, making unclear if a function should be in the context or with the the schema.
 3. With an absurdly big "accounts" folder next to a small "contacts" folder, it's now unclear when a feature should have its folder. This decision became at the discretion of each developer.
@@ -119,7 +119,7 @@ This solution has several advantages:  fewer files at the root, coherent structu
 
 ```
 EncheresImmo.Accounts.Organizations.Formulas.Formula
-Lib > Parent > Parent > Context > Schema
+Lib -> Parent -> Parent -> Context -> Schema
 ```
 
 One of the downsides of this solution is that it may result in more and more folders nested inside folders, making it challenging to access deeply nested files. With time, module names will be longer and harder to guess, such as : `EncheresImmo.Accounts.Organizations.PaymentInfos.Cards.Card`.
@@ -164,7 +164,7 @@ However, there are drawbacks to this solution, including a potentially large num
 
 <Asterism />
 
-Proposed by the other developer, not tested :
+My colleague tried two solutions, which can be summarized as follows:
 
 ```
 encheres_immo/
@@ -188,14 +188,11 @@ encheres_immo/
 └─ [... repo related files]
 ```
 
-Pros:
-  - Good for situations where the primary distinction is just between contexts and utility functions.
-  - Less folders at the root than B, and less nesting than A.
-  
-Cons:
-  - The distinction between contexts and schemas isn't as explicit, which might be slightly less intuitive for new developers.
-  - I don't think there is a good reason for a multi-schemas context like `Accounts`. Looking at our code, I think there would only be functions that should be in a specific context, or functions that are bad practices.
-  - This solution do not distinguish schemas/contexts which belong to larger features. In the case of `organization`, with multiple sub schemas/contexts, that could lead either to a messy folder : 
+This architecture features less nesting compared to the first proposal and fewer folders than the second one. Additionally, It makes a clearer distinction between context files and schema files, and allows multi-schemas context.
+
+However, I don't think there is a necessity for multi-schemas contexts, such as `Accounts`. Upon reviewing our code, such functions would either belong in a distinct context or are poor programming practices.
+
+Moreover, this solution does not distinguish schemas/contexts associated with more extensive features. When we multiply subsidiary schemas/contexts, this quickly leads to a messy folder:
 
 ```
 encheres_immo/
@@ -236,20 +233,20 @@ encheres_immo/
 └─ [... repo related files]
 ```
 
-"Feature" is a data structure (example: `user`), with a schema (and changesets), a context (functions to create/ use/ modify/ delete it), utils (optional - additional functions, boilerplates, templates, or behaviours), and child features (optional - embed or small tables).
+A "Feature" is a data structure (example: `user`), with a schema (and changesets), a context (functions to create/ use/ modify/ delete it), utils (optional - additional functions, boilerplates, templates, or behaviours), and child features (optional - embed or small tables).
 
-"Child feature" is a simple schema/ embed (example: `formula`) with few to none context functions, and few to none utils. A child feature can't have a child feature itself. If a child feature grows into a feature, we should transfer it to its own folder. 
+A "Child feature" is a simple schema/ embed (example: `formula`) with few to none context functions, and few to none utils. A child feature can't have a child feature itself. If a child feature grows into a feature, we should transfer it to its own folder. 
 
-**Pros:**
+The primary benefit of this solution is its ease of documentation, requiring just one schema and two paragraphs to explain. Furthermore, despite its straightforward approach, it stays versatile enough to ensure compatibility with our existing codebase.
 
-- Easy to document (1 schema & 2 paragraphs) and understand (I think)
-- Can be applied to most of our existing code (I'm currently trying on a branch)
-- Limit folder nesting
+Additionally, even if the module name doesn't fully describe the entire hierarchy as the first proposal does, it still enables us to grasp the module's immediate relationships. And it remains concise and straightforward to deduce, like the second proposal :
 
-**Cons:**
+```
+EncheresImmo.Organizations.Formulas.Formula
+Lib -> Feature -> Subfeature -> Schema
+```
 
-- Will eventually lead to a lot of folders at the root (more than B & C & D), but slower than A.
-- Imply folder structure modification every time a child feature becomes a feature, which should be rare.
+Drawbacks include the eventual proliferation of folders at the root, but this should stay slower than the second proposal and without the nesting (seen in the first proposal) or messy (noted in the third proposal) issues. Finally, if this method requires adjustments to the folder structure each time a sub-feature is upgraded to a main feature, but those instances should be rare.
 
 ### About test files
 
