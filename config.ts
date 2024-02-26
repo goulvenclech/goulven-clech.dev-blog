@@ -12,7 +12,7 @@ const blogCollection = defineCollection({
       display_abstract: z.boolean().default(false),
       display_cover: z.boolean().default(false),
       display_toc: z.boolean().default(false),
-      image: image(),
+      image: image().optional(),
       image_alt: z.string().default("Cover image"),
       image_caption: z.string().default(""),
       image_source: z.string().optional(),
