@@ -32,7 +32,7 @@ The Phoenix documentation, Elixir's web framework, does offer a [directory struc
 
 But our tiny [real-estate start-up](https://encheres-immo.com/) has grown over three years, with different developers and new features. Sadly, our back-end directory structure hasn't evolved with it and has become a mess.
 
-To be honest, I am extensively to blame for this situation. After the departure of the company's first developer, I remained alone as a junior developer. With the intention of recruiting another CTO, I maintained the project's initial philosophy as long as possible and delayed making essential architectural decisions
+To be honest, I am extensively to blame for this situation. After the departure of the company's first developer, I remained alone as a junior developer. With the intention of recruiting another CTO, I maintained the project's initial philosophy as long as possible and delayed making essential architectural decisions.
 
 Even as recruitment difficulties became apparent, it took me some time to step up as the tech lead. I suffered through the situation, which seemed beyond my control. And when we compensated with freelancers/ interns, I didn't dare nor know how to manage them correctly, leading to less coherent or qualitative code.
 
@@ -77,12 +77,12 @@ This situation arose from poorly documented personal logic, followed by various 
 1. The initial developer aimed to group account functions together, but their number made this file unreadable.
 2. Another developer (maybe me) wanted to reduce this file by putting the simplest functions with their schema, making unclear if a function should be in the context or with the the schema.
 3. With an absurdly big "accounts" folder next to a small "contacts" folder, it's now unclear when a feature should have its folder. This decision became at the discretion of each developer.
-4. Let that sink for a few years and Ta-da!  
+4. Let that sink for a few years and ta-da!  
 
 
 ## Main considerations
 
-Before starting to iterate, I knew my solution must address several considerations.
+Before starting to iterate, I knew my solution had to address several considerations.
 
 First, our system should be versatile enough to cover all existing and future features, while remaining consistent. It should also allow scaling small subfeatures into larger ones.
 
@@ -250,13 +250,15 @@ EncheresImmo.Organizations.Formulas.Formula
 Lib -> Feature -> Subfeature -> Schema
 ```
 
-Drawbacks include the eventual proliferation of folders at the root, but this should stay slower than the second proposal and without the nesting (seen in the first proposal) or messy (noted in the third proposal) issues. Finally, if this method requires adjustments to the folder structure each time a sub-feature is upgraded to a main feature, but those instances should be rare.
+Drawbacks include the eventual proliferation of folders at the root, but this should stay slower than the second proposal and without the nesting (seen in the first proposal) or messy (noted in the third proposal) issues. Finally, if this method requires adjustments to the folder structure each time a sub-feature is upgraded to a main feature, those instances should be rare.
 
 ### About test files
 
 <Asterism />
 
-To respect our legacy code, we'll maintain a `test/` folder at the project's root. This includes a `test_helper.exs` file and a `support/ folder` for shared test functions. `test/` (alike `lib/`) is split between `encheres_immo/` and `encheres_immo_web/` folders for back-end and front-end parts respectively. This approach, while not my initial choice, is the best compromise between respecting the existing code and making it evolve. It’s also aligned with the structure to which other developers are accustomed, as recommended by the Phoenix documentation.
+Let's quickly talk about test files, as I've intentionally skipped the subject so far.
+
+To respect our legacy code, we'll maintain a `test/` folder at the project's root. This includes a `test_helper.exs` file and a `support/` folder for shared test functions. `test/` (alike `lib/`) is split between `encheres_immo/` and `encheres_immo_web/` folders for back-end and front-end parts respectively. This approach, while not my initial choice, is the best compromise between respecting the existing code and making it evolve. It’s also aligned with the structure to which other developers are accustomed, as recommended by the Phoenix documentation.
 
 For my personal project, I plan to explore a slightly different structure: regroup the tests on one feature with the other related files, by creating a `[feature name]-test.exs` file in the folder of each feature. I will see if it's possible to make it work, but I think it can improve modularity, readability, and maintenance. 
 
@@ -268,7 +270,7 @@ It was also the first opportunity to formalize my decision process, and I knew t
 
 There are multiple benefits in using GitHub Issues. Firstly, these issues are stored in the repository, making them easily accessible. Additionally, writing allows us to express our thoughts clearly, illustrate them with examples, and review proposals from others. By doing so, we can see the progression of the discussion and how we reached the final decision.
 
-<FigImage src={ImageIssue} alt="Screenshot of the GitHub Issue" caption="Don't be afraid of length... Multiply examples, screenshots, and suggestions!" />
+<FigImage src={ImageIssue} alt="Screenshot of the GitHub Issue" caption="Don't be afraid to write long messages!" />
 
 We took a few days to discuss the proposal and make the necessary changes, but the effort paid off. By involving everyone, we made a more informed decision that everyone knows about. More oral meetings or rushing the decision alone would not have saved time in the long run.
 
@@ -279,11 +281,13 @@ At the conclusion of our discussions, we have to write down and document our dec
 
 This work not only enhanced the day-to-day experience of all developers on the project, but it allowed me to grow both as a developer and tech lead.
 
-Firstly, the journey from navigating a convoluted project structure to a clean, coherent, and balanced architecture taught me the value of flexibility in project design. This middle path proved to be a sustainable solution, marrying simplicity with scalability.
+Firstly, the journey from navigating a convoluted project structure to a clean, coherent, and balanced architecture taught me the value of versatility in project design. This middle ground proved to be a sustainable solution, marrying simplicity with scalability.
 
-Moreover, the iterative process really helped me understand each approach's strengths and weaknesses. By examining the problem from multiple perspectives, seeking out new ideas online, and applying them to our codebase... I learned a lot about the language, about project organization, but also about our own project!
+Moreover, the iterative process really helped me understand each approach's strengths and weaknesses. By examining the problem from multiple perspectives, seeking out new ideas online, and testing them on our codebase... I learned a lot about the language, about project design, but also about my own project!
 
-Finally, the decision-making process highlighted the importance of transparency and active team participation. Using GitHub Issues for documentation promoted clarity, ensured that all team is aware of the solution, and makes every voices contributed to shaping our project's future. It also gave me confidence in my ability to make important decisions for this project, even when it requires reworking the entire architecture.
+Finally, the decision-making process highlighted the importance of transparency and active team participation. Using GitHub Issues for documentation promoted clarity, made sure every team member could share their thoughts, and kept everyone aware of the final decision.
+
+It also gave me confidence in my ability to make important decisions for this project, even when it requires reworking the entire architecture.
 
 ### Possible improvement
 
@@ -293,7 +297,7 @@ Looking back, there are a few things that we could have done better :
 
 - **Formalizing the Process:** Adopting a standardized template for Request For Comments (RFC) issues will streamline our discussions when we are working on a big feature or a deep rework. This template should include sections for the issue description, proposed solution, alternatives considered, and the anticipated impact.
 
-- **Facilitating Engagement:** Starting the talk with a set of prepared questions could makes it easier for everyone to get involved and share their thoughts. As stated before, involving as many developers as possible not only improves the quality of the solution, but makes it known and understood by everyone.
+- **Facilitating Engagement:** Starting the talk with a set of prepared questions could make it easier for everyone to get involved and share their thoughts. As stated before, involving as many developers as possible not only improves the quality of the solution, but makes it known and understood by everyone.
 
 - **Concrete Documentation and Testing from the Start:** Opening a Pull Request (PR) alongside the issue, containing an initial draft of the documentation and key test files, will allow us to visualize and refine our ideas through tangible examples. This approach not only facilitates more concrete feedback but also ensures that the documentation and tests evolve alongside the decision-making process. It will also make the job easier for the developer developing the solution afterward.
 
