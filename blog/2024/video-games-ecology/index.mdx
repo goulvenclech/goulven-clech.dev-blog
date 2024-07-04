@@ -10,18 +10,165 @@ image: "./cover_ecology.jpg"
 image_alt: "Astro logo on a colorful background"
 image_caption: "A young british developer, trying to find a file in his new company's project."
 icon: "🌱"
-abstract: "In 2020, we made a video about the ecological impact of video games, and how they can make a difference... And in 2023, we made a game to illustrate it."
+abstract: "Post-mortem of two old projects and a discussion on the ecological impact of video games, both as an industry and as a medium."
+display_abstract: true
+display_toc: true
 ---
 
-<abbr>Quelle riche idée</abbr> que d'avoir des petites capitales !
+import HiddenH3 from "$components/hidden/HiddenH3.astro"
+import Asterism from "$components/typography/Asterism.astro"
+export const components = {h3: HiddenH3}
 
-```jsx
-<main>
-  <h1>{title}</h1>
-  <ul>
-  {tags.map(tag => <li>{tag}</li>)}
-  </ul>
-  <p>{content}</p>
-  <p>Published on {date}</p>
-</main>
-```
+A **bit of context before reading.** I met Aurélien & Érika in 2017 when we co-founded Game Dev Alliance. Even though we were never as active and serious as this project deserved, I can't emphasize enough how much I'm proud of what we did together and how big of a part of my life it was.
+
+During five years, we organized small game jams online, managed a game-dev Discord server, published an open-source tutorials website, and made a Youtube channel with over 30k subscribers... Now that we slowly took our distances from the project, I think it's time to look back at somes of those projects. And to share them with you.
+
+Today, I will talk about two projects we made together between 2020 and 2023. The first one is a Youtube video about the ecological impact of video games, and the second one is a video-game prototype we made for a school project. Both trying to answer the question: How can video games contribute to a better climate? 
+
+## Are video games eco-compatible?
+
+Climate change is an issue that concerns us all, and naturally, it's been talked about a lot in recent years. But between politicians scraping for votes, companies trying to look good, "experts" with questionable proposals, and more or less reliable associations... it's not easy to distinguish truth from falsehood, and even less so to understand how to change things.
+
+Especially for us, gamers and game developers. Digital technology involves a lot of metals, screens, and blinking gadgets... It seems terrible for the environment, and many public figures take the opportunity to blame new technologies for climate change, even though they may not have a clear idea of their actual impacts or whether there are more pressing issues.
+
+That's what we're going to try to figure out today. What is the impact of video gaming on the environment? Would we be better off stopping buying consoles? Is cloud gaming a risk for the future? And how can video gaming reduce its impacts or, at least, contribute to environmental awareness?
+
+Don't worry, we'll start from the basics to answer all these questions. Let's step back a bit from video gaming to begin with, because the goal is indeed to understand the part of gaming in the overall problem.
+
+## Impacts as an industry
+
+Blabla.
+
+### Which impacts to consider?
+
+<Asterism />
+
+You'll notice that in this article, even though we will talk about other forms of pollution, we are really going to focus on climate change since it is the most concerning problem in the medium term. According to the UN, we need to reduce our greenhouse gas emissions by 3.5% each year for the next 10 years to limit climate change to 2 degrees. Beyond this threshold, the consequences for our societies could be catastrophic. This could mean hundreds of millions of people forced to migrate, billions facing food insecurity, wars linked to resource scarcity, the disappearance of parts of our ecosystems and ice caps... It's very, very worrying.
+
+Returning to these notorious greenhouse gas emissions, note that we are primarily talking about one gas, CO2. We emit CO2 when we produce energy from living materials, for example, by burning wood or biomass, or from ancient living materials that have fossilized, such as coal, oil, and natural gas. It is particularly these last three that are the problem, because they contain carbon that has been locked away for millions of years and is suddenly released into the atmosphere.
+
+You can well imagine that if we burn in a few centuries resources that took millions of years to form, we are going to end up with a problem. Even though there is little chance that oil will disappear, the major producers in the world are gradually reaching their production peaks. To avoid decline, they are forced to seek new forms increasingly difficult to extract, and geopolitical tensions around these resources are intensifying. A sad fate that coal and gas will also know in a few decades.
+
+As our societies have been built on consuming more and more energy each year, relying on the abundance of coal, oil, and natural gas... Here we are, forced to go on a diet, trapped on one side by the scarcity of these resources and on the other by the climate change they cause.
+
+### How to mesure?
+
+<Asterism />
+
+And don't think that in everyday life, we only pollute with the gasoline in our cars. The majority of our emissions are actually invisible. It’s true that we're not burning coal in our apartments every day, yet all the objects and activities that make up our daily lives indirectly emit CO2. For example, your gaming console was manufactured in factories that consume energy, the raw materials had to be extracted from mines, a truck brought it to your home, and finally, a power plant generates electricity for you to use it every day. All these indirect impacts are very hard to visualize and estimate their significance.
+
+That's why we conduct “Life Cycle Assessments.” This tool allows us to estimate the impact of an object from its production to its waste treatment. We can quantify the amount of greenhouse gases it emits, expressed in grams of CO2 equivalent, and also gather lots of other useful information such as the amount of metals used. These analyses also address other forms of impact, such as water pollution, but this is a very local issue, not really a concern in Europe. However, we can discuss air pollution, particularly from micro-particles which kill millions of people each year, and are mainly produced by the burning of fossil fuels… yet again!
+
+Once these analyses are completed, these impacts calculated, we can now compare them to what society as a whole emits, to get a precise idea of the importance of video gaming and digital technology in climate change, because so far, things are unclear. And some public figures take advantage of this to play on fear and ignorance, choosing to present the impacts of our society very vaguely, without quantifying them, just showing images of mines in poor countries, making tirades about the tons and tons of CO2 we release into the air. It's very sensationalist, but it does not help us get a clear idea of the realities behind it, and it doesn’t tell us which problems we need to tackle if we want to change things. So how bad is it really?
+
+### Whole IT industry impacts
+
+<Asterism />
+
+In France, digital technology accounts for 2% of CO2 emissions. According to a Senate report, this figure could reach 7% by 2040, but only if digital emissions increase by 60% and all other sectors reduce their emissions as planned under the Paris Agreement… which, to put it politely, seems unlikely.
+
+To delve a little deeper, within the digital sector, you can see that 81% of the emissions are due to the manufacturing and use of devices. Of course, not all these devices are manufactured in France, but they are manufactured for France, so this counts towards our carbon footprint. Then, 14% of emissions come from data centers and only 5% from the network.
+
+We will actually ignore this last part. Firstly, because it’s quite negligible—it only represents 0.1% of total French emissions—and also because, according to forecasts, network emissions are expected to remain stable at least until 2040... This should raise questions about the hours and hours spent in the media talking about 5G, but let’s move on…
+
+France has a very important particularity: we are one of the few countries in the world with electricity that emits very few greenhouse gases... our TWh emits up to 10 times less greenhouse gas than in Germany, and 24 times less than in Estonia, for example. That’s why the majority of our impacts do not come from the use of devices, as is the case in the rest of the world, but rather from their transport or manufacture, which often takes place in countries where energy is much more carbon-intensive. Indeed, 70% of French digital emissions occur abroad, which also explains the low impact of our networks and data centers, which are much more significant on a global scale. Bear in mind that having low-carbon electricity can profoundly change the impacts associated with digital technology, and this will help us understand some avenues for the future...
+
+### Video games industry impacts
+
+<Asterism />
+
+Once we have an idea of the impacts of digital technology, it's quite difficult to get precise figures and reliable sources on the specific impacts of video gaming within it, but we can get an idea through a few indicators:
+
+In terms of devices, the main source of pollution in the digital sector, well, gaming consoles seem to have a relatively low impact compared to other devices, due to their low power consumption and also due to their numbers: there are only 15 million consoles in France compared to 98 million smartphones. It's also a matter of lifespan: a console generation lasts 7 years, but they usually last much longer, unlike a smartphone, which lasts on average about 2 years. In total, consoles emit 37 million tonnes of CO2 worldwide, which is 0.026% of global digital emissions. It's not much, in the jargon we say it's peanuts. And even for PC gaming, which is much more energy-intensive, the consumption is 75TWh per year, in other terms: 0.003% of global production. Unfortunately, I don't have the figures for France, but I imagine it’s comparable…
+
+Moreover, it's important to note that even though our consoles are becoming more powerful, they don’t necessarily become more energy-consuming; in fact, for the last three generations, it's been the opposite... For example, Nintendo has continuously improved since the Wii, and even for the more ambitious consoles, since the PS3, Sony’s consoles have become less and less power-hungry while improving their performance, and they have announced significant advancements with the PS5! And this should continue in the future, particularly thanks to processor manufacturers like ARM and AMD who make energy performance a priority.
+
+Then there are the famous data centers, but here again, video gaming seems to have only a minor impact, especially when compared to video streaming, which represents 60% of the traffic.
+
+I think you've understood, but let's state it clearly: the environmental impact of video gaming is low within the digital sector, which itself has a low impact. Given this observation, rather than thinking that "well great, we can do whatever we want, there's no impact," I think we could adopt two more interesting mindsets than that…
+
+### How to reduce those impacts?
+
+<Asterism />
+
+The first stance we could take is to acknowledge that even though video gaming is not the most urgent issue, it’s the one we are involved in. As developers or as players, it’s more obvious for us to start here and to ensure that video gaming moves in the right direction...
+
+To achieve this, the priority is to advocate for low-carbon electricity and an industry that operates on electricity. This could significantly reduce all the impacts associated with gaming, whether it’s the construction of consoles or the energy used to power our Fortnite sessions. We've already seen that France is quite well-positioned, but this is a status to defend and to promote, especially in countries that produce our devices. And it would be good not to dodge the issue, like big tech companies claiming to be "carbon neutral" while really just performing small tricks like "green energy contracts."
+
+Less carbon-intensive electricity goes hand in hand with the dematerialization of certain video gaming practices. Even though data centers have an impact and consume energy, they can replace more polluting physical practices. For instance, a game downloaded from your store emits 23 times less CO2 than buying a Blu-ray game, while also using less metal and plastic. Even considering this might increase the number of games sold, the difference is too significant to be anything but positive.
+
+Of course, it's harder to predict whether cloud gaming services will have such a virtuous effect from an ecological standpoint. Similar to current video streaming, these services will likely be very demanding on data centers. However, on the other hand, they could allow for using less energy and manufacturing fewer consoles, while making video gaming more accessible. Indeed, we already know that the disappearance of small company networks, replaced by large shared cloud services, has saved a lot of energy and reduced entry costs. Thus, we might imagine that cloud gaming will follow the same path, given that a large server will undoubtedly be better optimized, adjusting its power and consumption, compared to our personal computers.
+
+But whether it's for machines in the cloud or for our old devices at home, in any case, we should also push for more recycling. Computing is far from being the primary client of the mining industry, but we still have our part to do with the so-called “rare earths” for example. While they are generally, contrary to what their name suggests, quite abundant, they are very difficult to extract, often in countries that do not care about the working conditions of miners, and they are hardly recycled, simply because it is not profitable.
+
+Lastly, even though consoles are not more energy-consuming than before, making our devices last as long as possible greatly helps to reduce impacts. This largely involves fighting against planned obsolescence, but also by continuing to have console generations that last a long time. And that also means pushing game optimization to the max, which is a good thing for us! A well-optimized game is probably one where there were enough seniors on the team to master the technologies used, and thus we can hope, a studio where developers had time to do their work, where there’s no insane crunch that would drive teams away.
+
+## Impacts as a medium
+
+The second approach we could take is to consider that video games, as a medium, should contribute to environmental awareness. 
+
+In recent years, even though games have remained a source of entertainment, akin to sports, they have also increasingly established themselves as an artistic medium comparable to cinema, capable of addressing societal, philosophical, or current issues. Unfortunately, the theme of ecology remains very underutilized so far.
+
+### Can video games speak about ecology?
+
+<Asterism />
+
+Although the theme of “the environment” in a broad sense has been present since the first consoles, in games like Captain Planet or Super Mario Sunshine, the approach was often too moralistic and somewhat naive, typically pitting evil robots representing the malevolent industry against a utopian nature with pretty flowers and small animals that the hero must save.
+
+Even today, many games are considered “eco-friendly” simply because they offer an escape into a beautifully imagined nature, which is indeed very refreshing for many of us and mildly pricks our guilt as polluting individuals, but this doesn’t really help to foster a meaningful discourse on ecology.
+
+### Some poor examples
+
+<Asterism />
+
+While we can use the theme of nature to raise awareness about its preservation, as done by Never Alone with its mini-documentaries, this naivety also leads some games to deliver messages completely disconnected from reality, yet these are often presented as benchmarks by specialized media.
+
+Consider Stardew Valley, a very charming game, but it falls into a current trend criticized by many farmers. It tells the story of a city-dweller who has never planted a carrot in his life but becomes a farmer overnight because he inherited a piece of land and will save the village from the clutches of an evil multinational corporation. In reality, poor agricultural engineering students with their great ideas about permaculture quickly face the harsh realities of a difficult profession. The agriculture depicted in Stardew Valley, where the player feeds an entire village with hand-planted turnips and watered with a watering can, bears little resemblance to the actual work of farming or to the ecological and technical challenges that this profession faces. This isn’t inherently a problem for a modest work of fiction, but it should prompt us to question the way in which it is praised.
+
+In a completely different style, we could also talk about Satisfactory, where the low-carbon energy source of nuclear power comes with many environmental disadvantages: you need to store lots of nuclear waste that can’t be destroyed, you must be cautious of uranium radiation that can kill your character, etc. Yet alongside this, the game encourages you to burn coal and oil by the thousands of tons without any drawbacks. We quickly forget that these fossil resources are directly responsible for climate change and the pollution they cause kills millions of people each year. It’s clear that the developers are speaking more from their fears and prejudices than about real ecological issues.
+
+### Some good examples
+
+<Asterism />
+
+That said, it must be acknowledged that more and more games are addressing the subject, even if it's just in the background. For example, very recently there's As Far As The Eye from the Montpellier-based studio Unexpected, which, behind a cute fictional work, touches on the issue of climate disasters and the migrations they cause, topics still too seldom addressed by genres like post-apocalyptic, which remain too focused on health or military disasters. Also, it’s increasingly rare to see games that allow us to exploit natural resources for free. In Factorio, the difficulty increases with pollution, and in Civilization 6, players face climate disasters and rising sea levels.
+
+Blabla.
+
+### Some ideas for the future
+
+<Asterism />
+
+With the popularization of scientific outreach and advances in research on the subject, we hope to see more and more video games directly tackling major ecological challenges. If I give you the main sources of pollution in the world, you might have some ideas for games that could address them.
+
+Consider the industrial sector, where the main challenge should be to abandon fossil fuels in favor of low-carbon electricity. Then there are buildings, responsible for 18% of emissions, over half of which is due to heating! To improve this, buildings need better insulation, and gas and oil heating systems should be replaced with more modern technologies. And then there's agriculture, a major issue since the sector accounts for 25% of global emissions, half of which is caused by the overconsumption of meat and dairy products. Finally, transportation, which accounts for 14% of global emissions but nearly a third in wealthy countries like France, is almost entirely due to road transport. To reduce these impacts, we could increase public transportation, shift road freight to sea or rail, and also produce smaller, less energy-consuming cars.
+
+It's clear that all these problems are societal issues, rather than purely individual choices. This is where video games can have a real impact, by imagining through science fiction, fantasy, or utopia more ecological societies, or conversely through dystopia or post-apocalyptic scenarios, helping us envision the impacts of climate change if our societies fail to meet this challenge.
+
+Personally, I'm eager to see games that base their gameplay on such concrete ecological issues... For example, a management game that would ask us to manage an electrical grid without resorting to completely unrealistic batteries. We would have to consider issues like intermittency and network stability. Beyond being an interesting challenge, it would help raise awareness that an energy transition isn't just about installing a few wind turbines.
+
+Furthermore, this also involves abandoning the prejudices and fantasies about nature that still occupy too much space in our current video games... because while Stardew Valley dreams of gardening, in reality, it's the modernization of agriculture that allows us to use less and less land, has been growing French forests for 200 years, while better feeding the entire population. Therefore, the ecological transition will have to come through both technical progress and energy savings, but most importantly, by listening to scientists and professionals rather than our own biases.
+
+Of course, this isn't to say that all video games must have ecology as their theme, or that they must offer a very deep ecological moral and ultra-precise scientific solutions... But if more and more games tackle these issues, and a few of them put some effort into approximately adhering to scientific knowledge... Then video games can proudly say they contribute to a better future!
+
+## A practical case study
+
+In 2020, during the second year of his master's in educational engineering, Aurélien was tasked with creating an educational game on Unity. I came to help and we decided to revisit the theme of ecology—specifically energy transition—in a city-building game. The goal was to make the player aware of the challenges of the energy transition, and to make them understand the importance of balancing the different sources of energy to ensure the city's energy independence.
+
+### Initial idea 
+
+<Asterism />
+
+Blabla
+
+### Technical blabla 
+
+<Asterism />
+
+Blabla  
+
+### Power Up!
+
+<Asterism />
+
+Blabla

@@ -10,9 +10,8 @@ image: "./phoenix_cover.jpg"
 image_alt: "Astro logo on a colorful background"
 image_caption: "A young british developer, trying to find a file in his project."
 icon: "🗂️"
-abstract: "How do you organize an Elixir/Phoenix project to scale? What decision-making process do you use? A case study from a real estate startup."
+abstract: "How to organize an Elixir/Phoenix project to scale? What decision-making process do you use? A case study from a real estate startup."
 display_abstract: true
-display_cover: true
 display_toc: true
 published: "1.3.0"
 ---
@@ -26,7 +25,7 @@ export const components = {h3: HiddenH3}
 
 ## What's the problem?
 
-Elixir is a functional programming language, where the code is mainly organized as functions (duh!) and modules (a group of functions). However, the Elixir documentation doesn't give a lot of advice on how to organize a project, as expected from a general-purpose language.
+E**lixir is a functional programming language**, where the code is mainly organized as functions (duh!) and modules (a group of functions). However, the Elixir documentation doesn't give a lot of advice on how to organize a project, as expected from a general-purpose language.
 
 The Phoenix documentation, Elixir's web framework, does offer a [directory structure example](https://hexdocs.pm/phoenix/directory_structure.html) for new projects, but it's mainly detailed for the front-end part (`/lib/hello_web/`). The back-end part (`/lib/hello/`) is mostly composed by "schemas" files (`feature.ex`, the data structure and its changesets) and "context" files (`features.ex`, a module with all the public functions). 
 
