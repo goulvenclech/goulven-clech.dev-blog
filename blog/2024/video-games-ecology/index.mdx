@@ -23,7 +23,7 @@ import SonicImage from "./sonic.jpg"
 import MyselfImage from "./power-up-myself.jpeg"
 export const components = {h3: HiddenH3}
 
-A **bit of context before reading.** I met Aurélien & Érika in 2017 when we co-founded Game Dev Alliance. Even though we were never as active and serious as this project deserved, I can't emphasize enough how much I'm proud of what we did together and how big of a part of my life it was.
+A **bit of context before reading.** I met Aurélien & Erika in 2017 when we co-founded Game Dev Alliance. Even though we were never as active and serious as this project deserved, I can't emphasize enough how much I'm proud of what we did together and how big of a part of my life it was.
 
 During five years, we organized small game jams online, managed a game-dev Discord server, published an open-source tutorials website, and build a 30 000 subscribers Youtube channel... Now that we slowly took our distances from the project, I think it's time to look back at somes of those works. And to share them with you.
 
@@ -143,9 +143,9 @@ Finally, ecology becomes a background theme in many mainstream games. For exampl
 
 <Asterism />
 
-As scientific research advances and becomes more widespread, we can hope to see more video games directly addressing major environmental challenges. If I were to list the world’s biggest sources of emissions, you might even come up with a few ideas for games that could tackle them.
+As scientific research advances and becomes more widespread, we can hope to see more video games directly addressing major environmental challenges. As an example, let's consider the main sources of greenhouse gas emissions in France by sector, see if you can find a few ideas for games:
 
-For the industrial sector, the primary challenge is to move away from fossil fuels in favor of low-carbon electricity. Buildings are another major contributor, responsible for 18% of emissions—over half of which comes from heating—improving insulation and replacing gas and oil heating systems with modern technologies are key steps forward. Agriculture is also critical, accounting for 25% of global emissions, with half of that coming from the overconsumption of meat and dairy products. Finally, transportation makes up 14% of global emissions, but nearly a third in wealthier countries like France, with road transport being the primary culprit. To reduce these impacts, we could expand public transportation, shift freight from roads to sea or rail, and produce smaller, more energy-efficient vehicles.
+<p>For the industrial sector, the primary challenge is to move away from fossil fuels in favor of low-carbon electricity. Buildings are another major contributor, responsible for 15% of emissions—over half of which comes from heating—improving insulation and replacing gas and oil heating systems with modern technologies are key steps forward. Agriculture is also critical, accounting for 19% of the emissions, with half of that coming from the overconsumption of meat and dairy products. Finally, transportation makes up 33% of our emissions, with road transport being the primary culprit. To reduce these impacts, we could expand public transportation, shift freight from roads to sea or rail, and produce smaller, more energy-efficient vehicles.<sup>17</sup><side-note>17 — CITEPA (2024). *Rapport Secten*. Page 108 <a href="https://www.citepa.org/fr/secten/">Source</a></side-note></p>
 
 It's clear that all these problems are societal issues, rather than purely individual choices. This is where video games can have a real impact, by imagining through science fiction, fantasy, or utopia more ecological societies, or conversely through dystopia or post-apocalyptic scenarios, helping us envision the impacts of climate change if our societies fail to meet this challenge.
 
@@ -181,19 +181,19 @@ For the visual assets, we used <a href="https://blush.design/collections/ncvOzDO
 
 The game itself is a finite state machine called `GameState`, with three states: `titleState` for the main menu, `idleState` when the game is waiting for a player input, and `placingState` when the player is placing a building. `GameState` also manage the current `level` and `grid`, the player's `money` and `gain`, the `characters` challenge...
 
-<p>A finite state machine is a great way to structure a game because it allows you to model complex behavior in a clear and organized manner. By breaking down the different states of your game and the transitions between them, you create a system that is both predictable and easy to maintain. It will save you a lot of headaches compared to a loop with an hell of `if` and `else`.<sup>17</sup><side-note>17 — For Unity, we really like this <a href="https://youtu.be/-VkezxxjsSE?si=iJmgD-19kmZr5Odu">basic finite state machine</a> tutorial , made by Mina Pêcheux.</side-note></p>
+<p>A finite state machine is a great way to structure a game because it allows you to model complex behavior in a clear and organized manner. By breaking down the different states of your game and the transitions between them, you create a system that is both predictable and easy to maintain. It will save you a lot of headaches compared to a loop with an hell of `if` and `else`.<sup>16</sup><side-note>16 — For Unity, we really like this <a href="https://youtu.be/-VkezxxjsSE?si=iJmgD-19kmZr5Odu">basic finite state machine</a> tutorial , made by Mina Pêcheux.</side-note></p>
 
-<p>We also used extensively Unity's `ScriptableObject`, assets used to store data independently from scenes and GameObjects, allowing centralized data management and easy sharing across objects. `Characters`, `CellType`, `PowerSource`, `Structure` are all `ScriptableObject`. But also `Map`, who store one level's grid and help us initialize it. A `Map` stores a `Title`, an initial `Money` & `Gain` value, a target `PowerGauge`, but also a list of `CellType` for each collumn of the grid.<sup>18</sup><side-note>18 — To learn more about the subject, we recommend this <a href="https://youtu.be/aPXvoWVabPY?si=XiQGUGw9qi_5CiSq">Unity tutorial</a> by Brackeys, and this <a href="https://youtu.be/6vmRwLYWNRo?si=ot724EuNqVDtn0vf">Unite 2016</a> presentation by Richard Fine.</side-note></p>
+<p>We also used extensively Unity's `ScriptableObject`, assets used to store data independently from scenes and GameObjects, allowing centralized data management and easy sharing across objects. `Characters`, `CellType`, `PowerSource`, `Structure` are all `ScriptableObject`. But also `Map`, who store one level's grid and help us initialize it. A `Map` stores a `Title`, an initial `Money` & `Gain` value, a target `PowerGauge`, but also a list of `CellType` for each collumn of the grid.<sup>17</sup><side-note>17 — To learn more about the subject, we recommend this <a href="https://youtu.be/aPXvoWVabPY?si=XiQGUGw9qi_5CiSq">Unity tutorial</a> by Brackeys, and this <a href="https://youtu.be/6vmRwLYWNRo?si=ot724EuNqVDtn0vf">Unite 2016</a> presentation by Richard Fine.</side-note></p>
 
 ### Power Up!
 
 <Asterism />
 
-This article is already quite long, so before concluding, here is the final result of our work. We named the game *Power Up!*, and you can play it for free on itch.io, directly in your browser. It's in French, but the gameplay is quite intuitive, with few texts.
+We named the game *Power Up!*, and you can play it for free on itch.io, directly in your browser. It's in French, but the gameplay is quite intuitive, with few texts.
 
 <iframe title="PowerUp! itch.io" class="my-6" height="167" frameborder="0" src="https://itch.io/embed/1886526" width="100%" loading="lazy"><a href="https://aureliendossantos.itch.io/powerup">PowerUp! by Aurélien Dos Santos</a></iframe>
 
-<p>This prototype embark the complete first level of the game, and a second incomplete level.<sup>19</sup> It's obviously far from perfect, but it should give you a good idea of what we were aiming for. We hope you'll enjoy it!<side-note>19 — Unwinnable without hydraulic energy, which was not implemented.</side-note></p>
+<p>This prototype embark the complete first level of the game, and a second incomplete level.<sup>18</sup> It's obviously far from perfect, but it should give you a good idea of what we were aiming for. We hope you'll enjoy it!<side-note>18 — Unwinnable without hydraulic energy, which was not implemented.</side-note></p>
 
 In addition to the features we didn’t have time to fully develop, we envisioned many others to add complexity to the gameplay. These include managing network infrastructure, dealing with different seasons, and introducing bonuses related to electrification or reducing energy consumption. We also planned to add a "teacher mode", where educators could access informations and resources to support their students' gameplay sessions.
 
