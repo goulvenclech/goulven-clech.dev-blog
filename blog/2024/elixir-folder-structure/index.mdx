@@ -1,8 +1,9 @@
 ---
 title: "Directory structure with Elixir"
 date: 2024-02-26
-tags: 
+tags:
   - "web development"
+  - "enchères immo"
   - "elixir"
   - "phoenix"
   - "devops"
@@ -15,10 +16,8 @@ display_toc: true
 published: "1.3.0"
 ---
 
-import HiddenH3 from "$components/hidden/HiddenH3.astro"
+import HiddenH3 from "$components/typography/HiddenH3.astro"
 import Asterism from "$components/typography/Asterism.astro"
-import FigImage from "$components/figures/FigImage.astro"
-import ImageIssue from "./screen_issue_elixir.png"
 export const components = {h3: HiddenH3}
 
 
@@ -26,7 +25,7 @@ export const components = {h3: HiddenH3}
 
 E**lixir is a functional programming language**, where the code is mainly organized as functions (duh!) and modules (a group of functions). However, the Elixir documentation doesn't give a lot of advice on how to organize a project, as expected from a general-purpose language.
 
-The Phoenix documentation, Elixir's web framework, does offer a [directory structure example](https://hexdocs.pm/phoenix/directory_structure.html) for new projects, but it's mainly detailed for the front-end part (`/lib/hello_web/`). The back-end part (`/lib/hello/`) is mostly composed by "schemas" files (`feature.ex`, the data structure and its changesets) and "context" files (`features.ex`, a module with all the public functions). 
+The Phoenix documentation, Elixir's web framework, does offer a [directory structure example](https://hexdocs.pm/phoenix/directory_structure.html) for new projects, but it's mainly detailed for the front-end part (`/lib/hello_web/`). The back-end part (`/lib/hello/`) is mostly composed by *schemas* files (`feature.ex`, the data structure and its changesets) and *context* files (`features.ex`, a module with all the public functions).
 
 But our tiny [real-estate start-up](https://encheres-immo.com/) has grown over three years, with different developers and new features. Sadly, our back-end directory structure hasn't evolved with it and has become a mess.
 
@@ -34,13 +33,13 @@ To be honest, I am extensively to blame for this situation. After the departure 
 
 Even as recruitment difficulties became apparent, it took me some time to step up as the tech lead. I suffered through the situation, which seemed beyond my control. And when we compensated with freelancers/ interns, I didn't dare nor know how to manage them correctly, leading to less coherent or qualitative code.
 
-Today, the situation is different, as I gradually regained control of the project and built my confidence. I have built a team of five people, including three software developers, destined to grow. And now, it is time to re-organize our project 💪
+Today, the situation is different, as I gradually regained control of the project and built my confidence. I have built a team of five people, including three software developers, destined to grow. And now, it is time to re-organize our project!
 
 ### Inconsistent structures
 
 <Asterism />
 
-Let's consider an extract of the old structure : 
+Let's consider an extract of the old structure :
 
 ```
 encheres_immo/
@@ -71,24 +70,34 @@ If we can identify three contexts in this example (`accounts`, `auctions`, and `
 
 Additionally, some of these directory structures simply don't work. For example, instead of `users` and `organizations` context with their related functions, we have an abnormally long and messy `accounts.ex`. Worse, some schemas file, like `user.ex` and `organization.ex`, contain some functions that should also be in context.
 
-This situation arose from poorly documented personal logic, followed by various developers interpreting it in their own way. We can guess the origin of some problems: 
+This situation arose from poorly documented personal logic, followed by various developers interpreting it in their own way. We can guess the origin of some problems:
 1. The initial developer aimed to group account functions together, but their number made this file unreadable.
 2. Another developer (maybe me) wanted to reduce this file by putting the simplest functions with their schema, making unclear if a function should be in the context or with the the schema.
-3. With an absurdly big "accounts" folder next to a small "contacts" folder, it's now unclear when a feature should have its folder. This decision became at the discretion of each developer.
-4. Let that sink for a few years and ta-da!  
+3. With an absurdly big `accounts/` folder next to a small `contacts/` folder, it's now unclear when a feature should have its folder. This decision became at the discretion of each developer.
+4. Let that sink for a few years and ta-da!
 
 
 ## Main considerations
 
 Before starting to iterate, I knew my solution had to address several considerations.
 
-First, our system should be versatile enough to cover all existing and future features, while remaining consistent. It should also allow scaling small subfeatures into larger ones.
+First, our system should be versatile enough to cover all our current and future needs, without requiring a complete overhaul.
 
-Second, « *What is conceived well is expressed clearly* ». If good readability and consistency are the main objectives, this should make our solution easy to document and, therefore, easy to enforce. A few paragraphs explaining key concepts and a structure diagram should be enough.
+Second, « What is conceived well is expressed clearly ». If good readability and consistency are the main objectives, this should make our solution easy to document and, therefore, easy to enforce. A few paragraphs explaining key concepts and a structure diagram should be enough.
 
 Finally, I want to involve the current team as much as possible in decision-making. This approach will not only lead to a better solution but also ensure that the entire team is familiar with the solution, making it easier to implement initially.
 
-## Three errors to avoid
+### Context-driven architecture
+
+<Asterism />
+
+We kept Phoenix's « *context-driven architecture* » <sup>1</sup>, not only because it's the expected architecture by Elixir/Phoenix developers, but also because reorganizing the project it's already a time-consuming task, so changing it's whole philosophy is out of scope.<side-note>1 — Is there a standard term?</side-note>
+
+But it was a good opportunity for me to learn about other architectures philosophy, like *Clean Architecture*, *Hexagonal Architecture*, and *Domain-Driven Design* (<abbr title="Domain-Driven Design">DDD</abbr>). I really want to try the first two on a greenfield personal project, but they imply too much changes for our current project. I also definitely took some inspiration from <abbr title="Domain-Driven Design">DDD</abbr>, especially the idea of *bounded context* to help us define our contexts scope and boundaries, but we needed to keep a strict separation between the back-end (`encheres_immo`) and front-end parts (`encheres_immo_web` & `encheres_immo_api`).<sup>2</sup><side-note>2 — This separation is standard in Elixir monolith projects. It has also ruled out a pure vertical architecture.</side-note>
+
+Contexts still remain the core of our back-end, as they contain all the business logic, that will be used by the front-end parts (web and api). I will also use the term « *feature* » to describe a context with its related schemas, utils, and sub-features.
+
+## Three errors avoided
 
 We made several iterations before finding the right one. Some were deliberately radical and helped us to identify wrong directions.
 
@@ -160,7 +169,7 @@ EncheresImmo.Users.User
 Lib -> Context -> Schema
 ```
 
-However, there are drawbacks to this solution, including a potentially large number of folders at the root level, with no clear distinction between the central feature and the small sub-feature. Also, folder structure and module names do not represent schema relations. 
+However, there are drawbacks to this solution, including a potentially large number of folders at the root level, with no clear distinction between the central feature and the small sub-feature. Also, folder structure and module names do not represent schema relations.
 
 ### Messy hell
 
@@ -221,23 +230,23 @@ Not the miracle solution, but I think I found one halfway of all our solutions:
 ```
 encheres_immo/
 ├─ organizations/ <- a folder for each feature
-│    ├─ organizations.ex <- context 
+│    ├─ organizations.ex <- context
 │    ├─ organization.ex <- schema & changesets
 │    ├─ ? - utils/ <- utils folder
-│    │       └─ [... utils].ex <- utils files 
+│    │       └─ [... utils].ex <- utils files
 │    └─ ? -  formula/ <- subfolder for each child feature
 │            ├─ formula.ex <- child schema & changesets
-│            ├─ ? - formulas.ex <- child context 
-│            └─ ? - [... utils] <- child utils 
+│            ├─ ? - formulas.ex <- child context
+│            └─ ? - [... utils] <- child utils
 [...]
 ├─ application.ex <- app life cycle
 ├─ release.ex <- utils for migrations and seeding
 └─ [... repo related files]
 ```
 
-A "Feature" is a data structure (example: `user`), with a schema (and changesets), a context (functions to create/ use/ modify/ delete it), utils (optional - additional functions, boilerplates, templates, or behaviours), and child features (optional - embed or small tables).
+A « Feature » is a context folder (example: `user`) including : a context file with all the business logic and CRUD functions<sup>3</sup>; a schema file with the data structure (if needed) and its changesets; an optionnal utils folder.
 
-A "Child feature" is a simple schema/ embed (example: `formula`) with few to none context functions, and few to none utils. A child feature can't have a child feature itself. If a child feature grows into a feature, we should transfer it to its own folder. 
+A « Child feature » is a simpler feature, often a schema/ embed (example: `formula`) with few to none context functions, and few to none utils. A child feature can't have a child feature itself. If a child feature grows into a feature, we should transfer it to its own folder.
 
 The primary benefit of this solution is its ease of documentation, requiring just one schema and two paragraphs to explain. Furthermore, despite its straightforward approach, it stays versatile enough to ensure compatibility with our existing codebase.
 
@@ -258,17 +267,21 @@ Let's quickly talk about test files, as I've intentionally skipped the subject s
 
 To respect our legacy code, we'll maintain a `test/` folder at the project's root. This includes a `test_helper.exs` file and a `support/` folder for shared test functions. `test/` (alike `lib/`) is split between `encheres_immo/` and `encheres_immo_web/` folders for back-end and front-end parts respectively. This approach, while not my initial choice, is the best compromise between respecting the existing code and making it evolve. It’s also aligned with the structure to which other developers are accustomed, as recommended by the Phoenix documentation.
 
-For my personal project, I plan to explore a slightly different structure: regroup the tests on one feature with the other related files, by creating a `[feature name]-test.exs` file in the folder of each feature. I will see if it's possible to make it work, but I think it can improve modularity, readability, and maintenance. 
+For my personal project, I plan to explore a slightly different structure: regroup the tests on one feature with the other related files, by creating a `[feature name]-test.exs` file in the folder of each feature. I will see if it's possible to make it work, but I think it can improve modularity, readability, and maintenance.
+
+### About CQRS/ES files
+
+<Asterism />
+
+***Work in progress***.
 
 ## About the decision process
 
 As I said in the introduction, this is one of my first big decisions as a tech lead. I wanted to involve the team in the process, not only to make a better decision or for democratic management, but also to reassure myself.
 
-It was also the first opportunity to formalize my decision process, and I knew that writing would play a central part. Of course, some discussions happened in meetings, but I tried to keep a written trace of it, so I created a GitHub Issue. 
+It was also the first opportunity to formalize my decision process, and I knew that writing would play a central part. Of course, some discussions happened in meetings, but I tried to keep a written trace of it, so I created a GitHub Issue.
 
 There are multiple benefits in using GitHub Issues. Firstly, these issues are stored in the repository, making them easily accessible. Additionally, writing allows us to express our thoughts clearly, illustrate them with examples, and review proposals from others. By doing so, we can see the progression of the discussion and how we reached the final decision.
-
-<FigImage src={ImageIssue} alt="Screenshot of the GitHub Issue" caption="Don't be afraid to write long messages!" />
 
 We took a few days to discuss the proposal and make the necessary changes, but the effort paid off. By involving everyone, we made a more informed decision that everyone knows about. More oral meetings or rushing the decision alone would not have saved time in the long run.
 
@@ -291,6 +304,8 @@ It also gave me confidence in my ability to make important decisions for this pr
 
 <Asterism />
 
+<annotation>December 2024:<br/>While our solution has held up so far, the real estate crisis slowed our project's growth, leaving just two senior developers in the team. So our architecture hasn’t faced the test of a rapid scaling team—yet ;)</annotation>
+
 Looking back, there are a few things that we could have done better :
 
 - **Formalizing the process.** Adopting a standardized template for Request For Comments (<abbr title="Request For Comments">RFC</abbr>) issues will streamline our discussions when we are working on a big feature or a deep rework. This template should include sections for the issue description, proposed solution, alternatives considered, and the anticipated impact.
@@ -298,5 +313,3 @@ Looking back, there are a few things that we could have done better :
 - **Documentation and testing from the start.** Opening a Pull Request (<abbr title="Pull Request">PR</abbr>) alongside the issue, containing an initial draft of the documentation and key test files, will allow us to visualize and refine our ideas through tangible examples. This approach not only facilitates more concrete feedback but also ensures that the documentation and tests evolve alongside the decision-making process. It will also make the job easier for the developer developing the solution afterward.
 
 We'll see if these strategies can make our decision-making and documentation better, while fostering a more collaborative and efficient environment... Or if they will slow down and complicate our decision process.
-
-See you on the next <abbr title="Request For Comments">RFC</abbr> issue! 📜🧐
