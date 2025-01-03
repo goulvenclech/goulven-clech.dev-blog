@@ -1,0 +1,121 @@
+---
+title: "Bridging industry-specific CRMs"
+date: 2025-02-12
+published: "1.7.0"
+tags:
+  - "web development"
+  - "enchères immo"
+  - "elixir"
+  - "phoenix"
+abstract: "From modern <abbr title='REpresentational State Transfer'>REST</abbr> <abbr title='Application Programming Interface'>API</abbr>s to legacy <abbr title='File Transfer Protocol'>FTP</abbr> servers—Learn how Elixir « <i>behaviours</i> » helped us connect multiple <abbr>CRMs</abbr> to our real estate auction platform."
+image: "./cover_csslsrs.png"
+image_alt: "CSS LSRS logo"
+display_abstract: true
+display_toc: true
+---
+
+import HiddenH3 from "$components/typography/HiddenH3.astro"
+import Asterism from "$components/typography/Asterism.astro"
+export const components = {h3: HiddenH3}
+
+## Business context and need
+
+E**nchères Immo is a real estate auction platform** where I’ve worked since 2020, starting as an intern and now as software lead. Our clients are real estate agents, notaries, and other professionals who want to sell properties through online auctions. In a difficult period for the real estate market, we aim to help buyers and sellers find the best price quicker and transparently.
+
+Elixir and Phoenix power our platform, from backend to frontend,<sup>1</sup> and their reliability and scalability are key to our success. One of my 2025 goals is to share more about our achievements and challenges <a href="/tag-elixir">with Elixir</a>.<side-note>1 — For example, I should write a post about how using a single language monolith helped us in a start-up context… And where are the limits?</side-note>
+
+One key feature professionals asked for was the ability to import their properties. Most of them are used to spending time creating their properties and listings once in their favourite *<a href="https://en.wikipedia.org/wiki/Customer_relationship_management">Customer Relationship Management</a>* software (<abbr title="Customer Relationship Management">CRM</abbr>) and being able to export them to other platforms in one click.<sup>2</sup> Having to re-enter everything manually was a massive pain point for them, and none of our competitors offered a solution.<side-note>2 — The major real estate marketplaces in France—like SeLoger, LogicImmo, or LeBonCoin—are supported by most of the <abbr title="Customer Relationship Management">CRM</abbr>s. So it’s a common practice for our clients.</side-note>
+
+More than a way to attract new clients, linking our platform to those important actors in the real estate market has sometimes been the first step to a more in-depth collaboration. Integrating a technical ecosystem can be a way to integrate a business ecosystem ;)
+
+However, the problem with industry-specific <abbr title="Customer Relationship Management">CRM</abbr>s is the lack of standardisation. Each has its own <abbr title="Application Programming Interface">API</abbr> (from modern <abbr title="REpresentational State Transfer">REST</abbr> <abbr title="Application Programming Interface">API</abbr>s to legacy <abbr title='File Transfer Protocol'>FTP</abbr> servers) with different data structures (<abbr title="JavaScript Object Notation">JSON</abbr>, <abbr title="Extensible Markup Language">XML</abbr>, <abbr title="Comma-Separated Values">CSV</abbr>), authentication methods, and documentation (or lack of). We had to support them all without having to rewrite the whole import process for each new <abbr title="Customer Relationship Management">CRM</abbr>, duplicating code and reducing maintainability…
+
+## What's a behaviour?
+
+In other programming languages, you might have encountered concepts like *interfaces* (Java, C#), *protocols* (Clojure, Swift), *traits* (Rust), or *abstract classes* (Python, C++). In Elixir, we have « *behaviours* ».
+
+A behaviour defines a contract: a set of functions a module must implement to comply with a specific interface. It allows you to enforce consistency across modules while enabling polymorphism.<sup>3</sup><side-note>3 — Polymorphism is the fancy word to describe the ability of a code to operate on different types of data.</side-note>
+
+We start by defining a behaviour with the `@callback` directive, which specifies the functions that must be implemented:
+
+```elixir
+defmodule GreeterBehaviour do
+  @callback greet(name :: String.t()) :: String.t()
+end
+```
+
+Here, `greet/1` is the required function, which must take a string (`name`) and return another string.
+
+To use this behaviour, we create modules that call the `@behaviour` directive and implement all the specified functions:<side-note>In the following example, the `@impl true` annotation is optional but highly recommended. It ensures you're explicitly implementing a behaviour-defined function.</side-note>
+
+```elixir
+defmodule EnglishGreeter do
+  @behaviour GreeterBehaviour
+
+  @impl true
+  def greet(name), do: "Hello, #{name}!"
+end
+
+defmodule FrenchGreeter do
+  @behaviour GreeterBehaviour
+
+  @impl true
+  def greet(name), do: "Bonjour, #{name}!"
+end
+```
+
+While, contrary to those examples, behaviours are not the proper way to internationalise your application, they are a powerful tool when polymorphism is needed... Like dealing with multiple industry-specific CRMs!
+
+## How we used behaviours
+
+Implementation details with `crm` module.
+
+### How to retreive data
+
+<Asterism />
+
+Show FTP client with `alpine-ftp-server` and `vsftpd`. Explain the downsides of FTP for end-users.
+
+How we parse XML with `sweet_xml`.
+
+How we parse CSV with `csv`.
+
+<side-note class="xl:-mt-40">
+```csv wrap
+!#""!#""!#""!#""!#""!#""!#""
+!#""!#""!#""!#""!#""!#"235922"!#"0"!#""!#"0"!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"NON"!#"NON"!#""!#"NON"!#""!#""!#""!#""!#"NON"!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"NON"!#"NON"!#""!#""!#""!#"NON"!#""!#""!#""!#""!#""!#""!#"NON"!#"0"!#"0"!#"NON"!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"0"!#"0"!#""!#"0"!#"0"!#"1"!#"4.08-006"!#""
+```
+Extract from a SeLoger-compliant <abbr title="Comma-Separated Values">CSV</abbr> file. Probably for someone's job security, they use a custom `!#""` delimiter, and `OUI`/`NON` for booleans. And since the format lacks keys, you have to rely on the column order, hence all the empty and `NON` values...
+</side-note>
+
+Show REST API client for Apimo with `req`. And how we parse JSON.
+
+### UX/UI and error handling
+
+<Asterism />
+
+Show how we recover the number of properties imported and the number of errors.
+
+Show the info message during and after the import, on the agency and admin side.
+
+Detailled error logs with AppSignal.
+
+### How to add a new CRM
+
+<Asterism />
+
+Explain how the process is straightforward.
+
+The main pain point are obtening the documentation and a few test data. Than implementing the parsing.
+
+### How to test a CRM
+
+<Asterism />
+
+Test the data retrieval function.
+
+Test the parsing function.
+
+## Conclusion
+
+Blabla
