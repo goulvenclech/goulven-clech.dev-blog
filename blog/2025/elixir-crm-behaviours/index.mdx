@@ -17,11 +17,19 @@ display_toc: true
 import HiddenH3 from "$components/typography/HiddenH3.astro"
 import Asterism from "$components/typography/Asterism.astro"
 import GithubInline from "$components/typography/GithubInline.astro"
+import { Image } from "astro:assets"
+import FigImage from "$components/images/FigImage.astro"
+import SideImage from "$components/images/SideImage.astro"
+import IntegrationNewImage from "./integration-new.png"
+import IntegrationImportImage from "./integration-import.png"
+import IntegrationErrorImage from "./integration-error.png"
+import ComponentDiagramDark from "./component-diagram-dark.svg"
+import ComponentDiagramLight from "./component-diagram-light.svg"
 export const components = {h3: HiddenH3}
 
 ## Business context and need
 
-E**nchères Immo is a real estate auction platform** where I’ve worked since 2020, starting as an intern and now as software lead. Our clients are real estate agents, notaries, and other professionals who want to sell properties through online auctions. In a difficult period for the real estate market, we aim to help buyers and sellers find the best price quicker and transparently.
+E**nchères Immo is a real estate auction platform** where I’ve worked since 2020, starting as an intern and now as software lead. Our clients are real estate professionals who want to sell properties through online auctions. In a difficult period for the real estate market, we aim to help buyers and sellers find the best price quicker and transparently.
 
 Elixir and Phoenix power our platform, from backend to frontend,<sup>1</sup> and their reliability and scalability are key to our success. One of my 2025 goals is to share more about our achievements and challenges <a href="/tag-elixir">with Elixir</a>.<side-note>1 — For example, I should write a post about how using a single language monolith helped us in a start-up context… And where are the limits?</side-note>
 
@@ -29,13 +37,13 @@ One key feature professionals asked for was the ability to import their properti
 
 More than a way to attract new clients, linking our platform to those important actors in the real estate market has sometimes been the first step to a more in-depth collaboration. Integrating a technical ecosystem can be a way to integrate a business ecosystem ;)
 
-However, the problem with industry-specific <abbr title="Customer Relationship Management">CRM</abbr>s is the lack of standardisation. Each has its own <abbr title="Application Programming Interface">API</abbr> (from modern <abbr title="REpresentational State Transfer">REST</abbr> <abbr title="Application Programming Interface">API</abbr>s to legacy <abbr title='File Transfer Protocol'>FTP</abbr> servers) with different data structures (<abbr title="JavaScript Object Notation">JSON</abbr>, <abbr title="Extensible Markup Language">XML</abbr>, <abbr title="Comma-Separated Values">CSV</abbr>), authentication methods, and documentation (or lack of). We had to support them all without having to rewrite the whole import process for each new <abbr title="Customer Relationship Management">CRM</abbr>, duplicating code and reducing maintainability…
+However, the problem with industry-specific <abbr title="Customer Relationship Management">CRM</abbr>s is the lack of standardisation. Each has its own <abbr title="Application Programming Interface">API</abbr> (from modern <abbr title="REpresentational State Transfer">REST</abbr> <abbr title="Application Programming Interface">API</abbr>s to legacy <abbr title='File Transfer Protocol'>FTP</abbr> servers) with different data structures, formats (<abbr title="JavaScript Object Notation">JSON</abbr>, <abbr title="Extensible Markup Language">XML</abbr>, <abbr title="Comma-Separated Values">CSV</abbr>), and documentation (or lack of). We had to support them all without having to rewrite the whole import process for each new <abbr title="Customer Relationship Management">CRM</abbr>, duplicating code and reducing maintainability…
 
 ## What's a behaviour?
 
 In other programming languages, you might have encountered *interfaces* (Java, C#), *protocols* (Clojure, Swift), *traits* (Rust), or *abstract classes* (Python, C++). In Elixir, we have « *behaviours* ».
 
-A behaviour defines a set of functions a module must implement. It enforces consistency across modules while enabling polymorphism.<sup>3</sup><side-note>3 — Polymorphism is the fancy word to describe the ability of a code to operate on different types of data.</side-note>
+A behaviour defines a set of functions a module must implement. It enforces consistency across modules while enabling *polymorphism*.<sup>3</sup><side-note>3 — Polymorphism is the fancy word to describe the ability of a code to operate on different types of data.</side-note>
 
 We start defining a behaviour with the `@callback` directive, which specifies the functions that must be implemented. Here, `greet/1` is the required function, which must take a string (`name`) and return another string:
 
@@ -85,22 +93,15 @@ While, contrary to those examples, behaviours are not the proper way to <a href=
 
 Let me introduce you to the final architecture of our <abbr title="Customer Relationship Management">CRM</abbr> integrations feature:
 
-```mermaid
-flowchart TB
-        A[CrmIntegrations] --> B[CrmIntegration]
-        A --> C[Persistence]
-        A --> D[Filtering]
-        A --> E[Crm]
-        A --> F[Notifier]
+export const ComponentDiagramCaption = "Behaviours and implementations are in orange."
+export const ComponentDiagramAlt = "A component diagram showing the CrmIntegrations on top, linked to CrmIntegration and CrmJob. CrmIntegration belongs to Organization. CrmJob is linked to Persistence, Filtering, Crm, and Notifier. Persistence reads/writes to the Database. Crm is linked to CRMs modules, both are in orange."
 
-    B -->|belongs_to| O[Organization]
-    C -->|reads/writes| DB[(Database)]
-		E -->|implemented by| G[CRMs modules]
-```
+<FigImage src={ComponentDiagramLight} className="dark:hidden" caption={ComponentDiagramCaption} alt={ComponentDiagramAlt} />
+<FigImage src={ComponentDiagramDark} className="hidden dark:block" caption={ComponentDiagramCaption} alt={ComponentDiagramAlt} />
 
-In this diagram, `CrmIntegrations` is the feature context module,<sup>4</sup> with most of the business logic and the `sync_integration` public function that triggers the import process. `CrmIntegration` is the schema module, representing the integration between an `Organization` and its <abbr title="Customer Relationship Management">CRM</abbr>.<side-note>4 — Learn more about our « Context-Driven Architecture » in *<a href="/2024/elixir-folder-structure#context-driven-architecture">Directory structure with Elixir</a>*.</side-note>
+In this diagram, `CrmIntegrations` is the feature context module,<sup>4</sup> with public functions like `create_crm_integration` and `sync_crm_integration`. `CrmIntegration` is the schema module, representing the integration between an `Organization` and its <abbr title="Customer Relationship Management">CRM</abbr>.<side-note>4 — Learn more about our « Context-Driven Architecture » in *<a href="/2024/elixir-folder-structure#context-driven-architecture">Directory structure with Elixir</a>*.</side-note> `CrmJob` is an <a href="https://hexdocs.pm/oban/Oban.html">Oban</a> worker module, responsible for running the import process asynchronously.
 
-To avoid duplications and ensure maintainability, we contain <abbr title="Customer Relationship Management">CRM</abbr>-agnostic utilities in other modules: `Filtering` contains functions to prevent importing duplicate properties; `Persistence` is the module responsible for saving the properties in the database; and `Notifier` informs the user interfaces of the progress and errors in a human-readable way.
+To avoid duplications and ensure maintainability, we contain <abbr title="Customer Relationship Management">CRM</abbr>-agnostic utilities in other modules: `Filtering` contains functions to prevent importing duplicate properties; `Persistence` is the module responsible for saving the properties in the database; and `Notifier` is a realtime <a href="https://hexdocs.pm/phoenix_pubsub/Phoenix.PubSub.html">Publisher/Subscriber</a> service that informs the user interfaces of the progress and errors in a human-readable way.
 
 Finally, <abbr title="Customer Relationship Management">CRM</abbr> modules implement the `Crm` behaviour, which required functions implementing the <abbr title="Customer Relationship Management">CRM</abbr>-specific logic:
 
@@ -114,12 +115,12 @@ defmodule EncheresImmo.CrmIntegrations.Crm do
 	# Aliases and imports...
 
 	@doc """
-	Transform raw datas (straight from the XML/CSV/JSON parser) into a list of raw
-	"properties" (unparsed)
+	Get a list of raw properties from the CRM
 	"""
-  @callback extract_property_list(str :: map) :: list
+  @callback get_raw_properties(str :: map) :: list
 	@doc """
-	Convert a raw property into a Property changeset
+	Parse a raw property from the CRM into a Property changeset
+	ready to be sent to Ecto.
 	"""
   @callback convert_property_map(
               property :: map,
@@ -127,7 +128,7 @@ defmodule EncheresImmo.CrmIntegrations.Crm do
               integration :: CrmIntegration.t()
             ) :: map
 	@doc """
-	Get a unique identifier for a property (used to avoid duplicates)
+	Get a unique identifier for a property.
 	"""
   @callback get_source_id(property :: map) :: binary
 
@@ -158,7 +159,7 @@ defmodule EncheresImmo.CrmIntegrations.Twimmo do
 
 	# Aliases and imports...
 
-  # extract_property_list/1
+  # get_raw_properties/1
 
   @impl true
   def convert_property_map(property, agent_id, integration) do
@@ -202,101 +203,155 @@ Thanks to behaviours, we can focus on the parsing logic with almost no boilerpla
 
 <Asterism />
 
-Modern <abbr title="Customer Relationship Management">CRM</abbr>s, like <a href="https://apimo.net/">Apimo</a>, use <abbr title="REpresentational State Transfer">REST</abbr> <abbr title="Application Programming Interface">API</abbr>s.<sup>5</sup> It's the best-case scenario, as we can use the `req` library to make standard <abbr>HTTP</abbr> requests and use the brand-new built-in Elixir <abbr>JSON</abbr> parser for the response.<side-note>5 — or GraphQL, supposedly.</side-note>
+Modern <abbr title="Customer Relationship Management">CRM</abbr>s, like <a href="https://apimo.net/">Apimo</a>, use <abbr title="REpresentational State Transfer">REST</abbr> <abbr title="Application Programming Interface">API</abbr>s.<sup>5</sup> It's the best-case scenario, as we can use <a href="https://hexdocs.pm/req/Req.html">req</a>  to make standard <abbr>HTTP</abbr> requests, and use its built-in <abbr>JSON</abbr> parser.<side-note>5 — or GraphQL, supposedly.</side-note>
 
-Here is an extract of the `Apimo` module, implementing `get_raw_properties`:
+Example of a `get_raw_properties` implementation for a <abbr title="REpresentational State Transfer">REST</abbr> <abbr title="Application Programming Interface">API</abbr>:
 
 ```elixir
-  @impl true
-  def get_raw_properties(
-        agency_id,
-        limit \\ 100,
-        offset \\ 0,
-        acc \\ []
-      ) do
-    case apimo_request(properties_endpoint(agency_id, limit, offset)) do
-      {:ok, %Req.Response{body: body}} ->
-        new_acc = (body["properties"] || []) ++ acc
-        count = length(new_acc)
-        total_items = body["total_items"]
-				# We have to paginate the results
-        if count < total_items do
-          Logger.info(
-            "#{__MODULE__}: syncing properties #{count} to #{if count + limit < total_items, do: count + limit, else: total_items} for agency #{agency_id}"
-          )
-          get_raw_properties(agency_id, limit, offset + limit, new_acc)
-        else
-          Logger.info("#{__MODULE__}: syncing done: #{count}")
-          new_acc
-        end
+@impl true
+def get_raw_properties(agency_id) do
+	case api_request(properties_endpoint(agency_id)) do
+		{:ok, %Req.Response{body: body}} ->
+			body["properties"] || []
+		error ->
+			CrmIntegrationNotifier.error(org_id)
+			Logger.error("#{__MODULE__}: #{inspect(error)}")
+			error
+	end
+end
 
-      error ->
-			  CrmIntegrationNotifier.error(org_id)
-        Logger.error("#{__MODULE__}: #{inspect(error)}")
-        error
-    end
-  end
-
-  defp apimo_request(endpoint) do
-    Req.new(base_url: @base_url)
-    |> Req.get(
-      url: endpoint,
-      headers: %{Authorization: "Basic " <> Base.encode64("#{apimo_provider()}:#{apimo_token()}")}
-    )
-  end
+defp api_request(endpoint) do
+	Req.new(base_url: @base_url)
+	|> Req.get(
+		url: endpoint,
+		headers: %{Authorization: "Basic " <> Base.encode64("#{api_provider()}:#{api_token()}")}
+	)
+end
 ```
 
 Sadly, the real estate world is not at the forefront of technology, and most <abbr title="Customer Relationship Management">CRM</abbr>s still use <abbr title='File Transfer Protocol'>FTP</abbr> servers to exchange data. This means running a server on our side, managing access for each <abbr title="Customer Relationship Management">CRM</abbr>, and parsing the files they drop in. Also, a user has to wait for its <abbr title="Customer Relationship Management">CRM</abbr> to send the file, which can take up to 24 hours…<sup>6</sup><side-note>6 — This is one of the leading ticket generators for our customer success team, as users expect properties to be imported in real time, and often blame us for the delay.</side-note>
 
-We use <GithubInline user="10390169" />'s <a href="https://github.com/encheres-immo/fly-ftp-server">custom client</a> for <a href="https://fly.io/">Fly.io</a>, build on top of <a href="https://hub.docker.com/r/delfer/alpine-ftp-server">alpine-ftp-server</a> and <a href="https://en.wikipedia.org/wiki/Vsftpd">vsftpd</a>. Accesses are managed by a environment variable, with a folder per <abbr title="Customer Relationship Management">CRM</abbr>. We put all related utilities, like `FTP.get_files/2`, in a `FTP` module.
+We use <GithubInline user="10390169" />'s <a href="https://github.com/encheres-immo/fly-ftp-server">custom client</a> for <a href="https://fly.io/">Fly.io</a>, build on top of <a href="https://hub.docker.com/r/delfer/alpine-ftp-server">alpine-ftp-server</a> and <a href="https://en.wikipedia.org/wiki/Vsftpd">vsftpd</a>. Accesses are managed by a environment variable, with a folder per <abbr title="Customer Relationship Management">CRM</abbr>. We put all related utilities, like `FTP.get_files/2`, in a `FTP` module.<sup>7</sup><side-note>
+7 — As every <abbr title="Customer Relationship Management">CRM</abbr> drop their files in their own folder, and named them with the agency code, it's thankfully the same function. Only differences are the format (but we return the path) and if it's zipped or not.</side-note>
 
 Here is an extract of the `Twimmo` module, implementing `get_raw_properties`:
 
 ```elixir
-  @impl true
-  def get_raw_properties(agency_id) do
-    with {:ok, files} <- FTP.get_files("twimmo", agency_id),
-				 file <- Enum.find(files, fn file -> file == "Annonces.csv" end),
-				 {:ok, content} <- File.read(file) do
-			content |> SeLogerParser.parse_string()
-		else
-			error ->
-			  CrmIntegrationNotifier.error(org_id)
-				Logger.error("#{__MODULE__}: #{inspect(error)}")
-				error
-		end
+@impl true
+def get_raw_properties(agency_id) do
+	with {:ok, files} <- FTP.get_files("twimmo", agency_id),
+				file <- Enum.find(files, fn file -> file == "Annonces.csv" end),
+				{:ok, content} <- File.read(file) do
+		content |> SeLogerParser.parse_string()
+	else
+		error ->
+			CrmIntegrationNotifier.error(org_id)
+			Logger.error("#{__MODULE__}: #{inspect(error)}")
+			error
 	end
+end
 
-  NimbleCSV.define(SeLogerParser,
-    separator: "!#",
-    escape: "\"",
-    newlines: ["\r\n"],
-    moduledoc: """
-		(... Specification details)
-		"""
-	)
+NimbleCSV.define(SeLogerParser,
+	separator: "!#",
+	escape: "\"",
+	newlines: ["\r\n"],
+	moduledoc: """
+	(... Specification details)
+	"""
+)
 ```
 
-In this example, we use <a href="https://hexdocs.pm/nimble_csv/NimbleCSV.html">NimbleCSV</a> to parse the <abbr title="Comma-Separated Values">CSV</abbr> file, a simple library that allows you to define multiple parsers to handle different <abbr title="Comma-Separated Values">CSV</abbr> formats.<sup>7</sup> We also use <a href="https://hexdocs.pm/sweet_xml/SweetXml.html">sweet-xml</a> to parse the <abbr title="Extensible Markup Language">XML</abbr> files.
+In this example, we use <a href="https://hexdocs.pm/nimble_csv/NimbleCSV.html">NimbleCSV</a> to parse <abbr title="Comma-Separated Values">CSV</abbr> files, a simple library that allows you to define multiple parsers to handle different <abbr title="Comma-Separated Values">CSV</abbr> formats.<sup>8</sup> Alternatively, we also use <a href="https://hexdocs.pm/sweet_xml/SweetXml.html">sweet-xml</a> to parse <abbr title="Extensible Markup Language">XML</abbr> files.
 
 <side-note class="lg:-mt-[34rem]">
 ```csv wrap
 !#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"235922"!#"0"!#""!#"0"!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"NON"!#"NON"!#""!#"NON"!#""!#""!#""!#""!#"NON"!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"NON"!#"NON"!#""!#""!#""!#"NON"!#""!#""!#""!#""!#""!#""!#"NON"!#"0"!#"0"!#"NON"!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"0"!#"0"!#""!#"0"!#"0"!#"1"!#"4.08-006"!#""
 ```
-7 — Extract from a SeLoger-compliant <abbr title="Comma-Separated Values">CSV</abbr> file. Probably for someone's job security, they use a custom `!#""` delimiter, and `OUI`/`NON` for booleans. And since the format lacks keys, you have to rely on the column order, hence all the empty and `NON` values...
+8 — Extract from a SeLoger-compliant <abbr title="Comma-Separated Values">CSV</abbr> file. Probably for someone's job security, they use a custom `!#""` delimiter, and `OUI`/`NON` for booleans. And since the format lacks keys, you have to rely on the column order, hence all the empty and `NON` values...
 </side-note>
 
-And that's it! We can import properties from any <abbr title="Customer Relationship Management">CRM</abbr> with minimal effort, from <abbr title="REpresentational State Transfer">REST</abbr> <abbr title="Application Programming Interface">API</abbr>s to <abbr title='File Transfer Protocol'>FTP</abbr> servers, with different data structures.
+And that's it! We can import properties from any <abbr title="Customer Relationship Management">CRM</abbr> with minimal effort, from <abbr title="REpresentational State Transfer">REST</abbr> <abbr title="Application Programming Interface">API</abbr>s to <abbr title='File Transfer Protocol'>FTP</abbr> servers, with different data structures and formats.
 
 ### User interface and error handling
 
 <Asterism />
 
-Show how we recover the number of properties imported and the number of errors.
+Thanks to our unified architecture, we can provide a consistent user experience across all <abbr title="Customer Relationship Management">CRM</abbr>s. Therefore, a manager or the owner of an organization can create a new integration in a few clicks, by selecting the <abbr title="Customer Relationship Management">CRM</abbr> and entering its « agency code ».<sup>9</sup><side-note><SideImage src={IntegrationNewImage} alt="New CRM integration form" />9 — Usually, the agency code is easily found in the <abbr title="Customer Relationship Management">CRM</abbr>... Except for one provider, who emails it to us for each new first export.</side-note>
 
-Show the info message during and after the import, on the agency and admin side.
+A button « Import from (source name) » appears on the properties page, allowing users to trigger the import manually. The import process runs asynchronously and, as it can take a while, the user interface shows a loading spinner and a message indicating the progress.<sup>10</sup><side-note><SideImage src={IntegrationImportImage} alt="New CRM integration form" />10 — The delay is mainly due to images processing, as we have to download them, resize them, and upload them to our storage.</side-note>
 
-Detailled error logs with AppSignal.
+This is powered by the `CrmIntegrationNotifier` module, which uses <a href="https://hexdocs.pm/phoenix_pubsub/Phoenix.PubSub.html">Phoenix.PubSub</a> to broadcast messages to the user interfaces. During the import process, we can tell the user how many properties have been imported, how many are left, and what's the last property processed:
+
+```elixir
+CrmIntegrationNotifier.progress(
+	integration.organization_id,
+	integration.source,
+	imported_count,
+	total_count,
+	property_id,
+)
+```
+
+Liveview components can then subscribe to the `CrmIntegrationNotifier` channel and, in our case, update the progress message and the properties list in real time:
+
+```elixir
+def mount(_params, session, socket) do
+	CrmIntegrationNotifier.subscribe(org_id)
+	# Other initializations...
+end
+
+def handle_info(
+			{CrmIntegrationNotifier, :progress,
+				%{
+					imported: imported,
+					total: total,
+					last_inserted_property_id: _last_inserted_property_id,
+					source: source
+				}},
+			socket
+		) do
+	# Update the progress message
+	crm_import_status = %{
+		"state" => "loading",
+		"message" => crm_import_on_going_message(imported, total, source)
+	}
+	socket = assign(socket, crm_import_status: crm_import_status)
+	# Update the properties list
+	new_property = Properties.get_property!(last_inserted_property_id, nil)
+	socket = stream_insert(socket, :properties, new_property, at: 0)
+	{:noreply, socket}
+end
+```
+
+This can also be used to display the success or failure of the import:
+
+```elixir
+@impl true
+def handle_info({CrmIntegrationNotifier, :error, _data}, socket) do
+	crm_import_status = %{"state" => "error", "message" => crm_import_error_message()}
+	{:noreply, assign(socket, crm_import_status: crm_import_status)}
+end
+
+def handle_info({CrmIntegrationNotifier, :success, %{total: total, source: source}}, socket) do
+	crm_import_status = %{
+		"state" => "success",
+		"message" => crm_import_success_message(total, source)
+	}
+
+	{:noreply, assign(socket, crm_import_status: crm_import_status)}
+end
+```
+
+As user can't do a lot in case of error,<sup>11</sup> we provide a simple message suggesting that they contact us. But on our side, we log the error at the same time. As seen previously:<side-note><SideImage src={IntegrationErrorImage} alt="Error during CRM import" />11 — Most likely an edge case not handled by our parser, or an error in the <abbr title="Customer Relationship Management">CRM</abbr> data.</side-note>
+
+```elixir
+error ->
+	CrmIntegrationNotifier.error(org_id)
+	Logger.error("#{__MODULE__}: #{inspect(error)}")
+	error
+```
+
+This log is then sent to our <a href="https://appsignal.com/">AppSignal</a> instance, where we can track the errors and see if they are recurrent. We also have a dedicated Slack channel where we receive notifications for each error, so we can react quickly if needed. Thus, we often inform the customer success team before the user reaches out.
 
 ## Conclusion
 
