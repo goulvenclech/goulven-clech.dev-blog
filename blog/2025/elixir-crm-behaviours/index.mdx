@@ -99,7 +99,7 @@ export const ComponentDiagramAlt = "A component diagram showing the CrmIntegrati
 <FigImage src={ComponentDiagramLight} className="dark:hidden" caption={ComponentDiagramCaption} alt={ComponentDiagramAlt} />
 <FigImage src={ComponentDiagramDark} className="hidden dark:block" caption={ComponentDiagramCaption} alt={ComponentDiagramAlt} />
 
-In this diagram, `CrmIntegrations` is the feature context module,<sup>4</sup> with public functions like `create_crm_integration` and `sync_crm_integration`. `CrmIntegration` is the schema module, representing the integration between an `Organization` and its <abbr title="Customer Relationship Management">CRM</abbr>.<side-note>4 — Learn more about our « Context-Driven Architecture » in *<a href="/2024/elixir-folder-structure#context-driven-architecture">Directory structure with Elixir</a>*.</side-note> `CrmJob` is an <a href="https://hexdocs.pm/oban/Oban.html">Oban</a> worker module, responsible for running the import process asynchronously.
+In this diagram, `CrmIntegrations` is the feature context module,<sup>4</sup> with public functions like `create_crm_integration` and `sync_crm_integration`. `CrmIntegration` is the schema module, representing the integration between an `Organization` and its <abbr title="Customer Relationship Management">CRM</abbr>.<side-note>4 — Learn more about our « Context-Driven Architecture » in *<a href="/2024/elixir-folder-structure">Directory structure with Elixir</a>*.</side-note> `CrmJob` is an <a href="https://hexdocs.pm/oban/Oban.html">Oban</a> worker module, responsible for running the import process asynchronously.
 
 To avoid duplications and ensure maintainability, we contain <abbr title="Customer Relationship Management">CRM</abbr>-agnostic utilities in other modules: `Filtering` contains functions to prevent importing duplicate properties; `Persistence` is the module responsible for saving the properties in the database; and `Notifier` is a realtime <a href="https://hexdocs.pm/phoenix_pubsub/Phoenix.PubSub.html">Publisher/Subscriber</a> service that informs the user interfaces of the progress and errors in a human-readable way.
 
@@ -263,7 +263,7 @@ NimbleCSV.define(SeLogerParser,
 
 In this example, we use <a href="https://hexdocs.pm/nimble_csv/NimbleCSV.html">NimbleCSV</a> to parse <abbr title="Comma-Separated Values">CSV</abbr> files, a simple library that allows you to define multiple parsers to handle different <abbr title="Comma-Separated Values">CSV</abbr> formats.<sup>8</sup> Alternatively, we also use <a href="https://hexdocs.pm/sweet_xml/SweetXml.html">sweet-xml</a> to parse <abbr title="Extensible Markup Language">XML</abbr> files.
 
-<side-note class="lg:-mt-[34rem]">
+<side-note class="xl:-mt-[30rem]">
 ```csv wrap
 !#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"235922"!#"0"!#""!#"0"!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"NON"!#"NON"!#""!#"NON"!#""!#""!#""!#""!#"NON"!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"NON"!#"NON"!#""!#""!#""!#"NON"!#""!#""!#""!#""!#""!#""!#"NON"!#"0"!#"0"!#"NON"!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#""!#"0"!#"0"!#""!#"0"!#"0"!#"1"!#"4.08-006"!#""
 ```
