@@ -1,6 +1,6 @@
 ---
 title: "Bridging industry-specific CRMs"
-date: 2025-02-12
+date: 2025-02-21
 published: "1.7.0"
 tags:
   - "web development"
@@ -8,10 +8,9 @@ tags:
   - "elixir"
   - "phoenix"
 abstract: "From modern <abbr title='REpresentational State Transfer'>REST</abbr> <abbr title='Application Programming Interface'>API</abbr>s to legacy <abbr title='File Transfer Protocol'>FTP</abbr> servers—Learn how Elixir « <i>behaviours</i> » helped us connect multiple <abbr>CRMs</abbr> to our real estate auction platform."
-image: "./cover_csslsrs.png"
-image_alt: "CSS LSRS logo"
-display_abstract: true
-display_toc: true
+abstract_clean: "From modern REST APIs to legacy FTP servers—Learn how Elixir « behaviours » helped us connect multiple CRMs to our real estate auction platform."
+image: "./cover_behaviours_light.jpg"
+image_alt: "Illustration of a red house surrounded by greenery, with a tree, bushes, and a body of water in the foreground. A woman wrapped in a patterned towel stands at the water's edge."
 ---
 
 import HiddenH3 from "$components/typography/HiddenH3.astro"
@@ -93,7 +92,7 @@ While, contrary to those examples, behaviours are not the proper way to <a href=
 
 Let me introduce you to the final architecture of our <abbr title="Customer Relationship Management">CRM</abbr> integrations feature:
 
-export const ComponentDiagramCaption = "Behaviours and implementations are in orange."
+export const ComponentDiagramCaption = "Behaviours and implementations are in brown."
 export const ComponentDiagramAlt = "A component diagram showing the CrmIntegrations on top, linked to CrmIntegration and CrmJob. CrmIntegration belongs to Organization. CrmJob is linked to Persistence, Filtering, Crm, and Notifier. Persistence reads/writes to the Database. Crm is linked to CRMs modules, both are in orange."
 
 <FigImage src={ComponentDiagramLight} className="dark:hidden" caption={ComponentDiagramCaption} alt={ComponentDiagramAlt} />
