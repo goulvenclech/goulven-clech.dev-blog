@@ -1,0 +1,13 @@
+---
+type: "special"
+date: 2025-01-21
+name: "Dark mode pictures"
+description: "Most of the pictures will now have a dark mode version. This includes blog entries cards, as you can see below ☞"
+---
+import DarkMode from "$components/controls/DarkMode.astro"
+import Card from "$components/Card.astro"
+import { getEntry } from 'astro:content'
+
+<DarkMode />
+
+<Card entry={await getEntry('blog', '2025/elixir-crm-behaviours')}/>
