@@ -4,7 +4,7 @@ date: 2025-03-28
 published: "1.8.0"
 tags:
   - "coffee"
-abstract: "A comprehensive cheat sheet to help you better understand, buy, and taste coffee. With a few roasters recommendations in Finland."
+abstract: "A comprehensive cheat sheet to help you better understand, buy, and enjoy coffee. With a few roasters recommendations in Finland."
 image: "./cover_behaviours_light.webp"
 image_dark: "./cover_behaviours_dark.webp"
 image_alt: "Illustration of a red house surrounded by greenery, with a tree, bushes, and a body of water in the foreground. A woman wrapped in a patterned towel stands at the water's edge."
@@ -17,15 +17,18 @@ import GithubInline from "$components/typography/GithubInline.astro"
 import { Image } from "astro:assets"
 import FigImage from "$components/images/FigImage.astro"
 import SideImage from "$components/images/SideImage.astro"
+import CoffeePricesHistorical from "./coffee-prices-historical.png"
 export const components = {h3: HiddenH3}
 
 ## Basics of speciality coffee
 
-S**ince my first steps in the coffee world**, I've been amazed by the passionate people I've encountered, always eager to share their knowledge and love for coffee. One of small but proudest moments was seeing my first article—especially the gear list—help others get into specialty coffee, and then watch them share it with others.
+T**he pandemic has changed our morning coffee**. By revealing how deeply our daily routines impact our mental health and well-being, it inspired many of us to explore *specialty coffee* for the first time.
 
-Two years later, I want to share some of the knowledge I’ve gathered as a passionate enthusiast. Think of it as a mini personal knowledge base, a cheat sheet, or a quick guide to the key things to know to better understand, buy, and enjoy specialty coffee.
+Two years ago, to show that it can be much more than a bitter pick-me-up, I shared my own journey in <a>*Discovering Coffee in Toulouse*</a>. Since then, I've continually been amazed by all the passionate people, amazing events, and delicious coffees I've encountered. Even more gratifying, my beginner’s gear recommendations have encouraged a few newcomers to dive into this fascinating world.
 
-Blablabla.
+Yet, I understand that specialty coffee can seem intimidating, filled with obscure terms and concepts that might seem a bit snobbish. That's why I'm excited to share more of what I've learned, beginning with my personal cheat sheet—a quick guide to help you better understand, buy, and enjoy coffee.
+
+I hope you find it helpful!
 
 ### Beans' journey
 
@@ -39,13 +42,20 @@ Linked to the previous article for brewing methods.
 
 <Asterism />
 
-Blablabla.
+Often, people visiting specialty coffee shops for the first time are surprised to see an espresso priced over 2€, compared to the 1.50€ they'd pay at a chain, or 0.50€ at a vending machine. But considering the steps, the people involved, and kilometers traveled, how can coffee remain this cheap and still be sustainable? It simply can't.
+
+After the collapse of the International Coffee Agreement's *quota system* in 1989, the removal of export quotas unleashed massive stockpiles and encouraged aggressive production expansions—especially in Brazil and Vietnam. This surge drove coffee prices to historically low levels, often below production costs.<sup>1</sup> Although occasional price spikes occurred due to severe weather events,<sup>2</sup> coffee prices have consistently failed to keep pace with global inflation. As a result, real prices steadily declined over three decades, creating an economic crisis for millions of smallholder coffee farmers, especially in Latin America and Africa.<sup>3</sup><side-note class="xl:-mt-64"><SideImage src={CoffeePricesHistorical} alt="ça monte pas" />1 — TODO: make a graph with the evolution of <a href="https://www.macrotrends.net/2535/coffee-prices-historical-chart-data">coffee prices</a> between 1980 and 2010. With a vertical line for the 1989 collapse and gray areas for price spikes.</side-note><side-note>2 — Such as in 1994, 1997, and 2010.</side-note><side-note>3 — « [...] although the coffee business is booming in consuming developed countries, current rock bottom prices are causing immense hardship to countries where coffee is a key economic activity, as well as to the farmers who produce it. » ☞ Osorio N (2002). *The coffee crisis: a threat to sustainable development*. International Coffee Organization <a href="https://www.ico.org/documents/ed1849.pdf">Source</a></side-note>
+
+Despite this « silent crisis », no global coffee price crisis visibly disrupted consumer markets before the COVID-19 pandemic. But then, coffee prices have surged to historic highs by 2025<sup>4</sup> due to climatic, economic, and geopolitical factors. Climatically, the 2021 severe frost in Brazil, the 2023 drought in Vietnam, and the 2024 poor harvests in Indonesia have significantly reduced coffee yields, especially for robusta. Economically, sustained global demand, heightened market speculation, and rising costs for fertilizers, energy, and shipping—exacerbated by the war in Ukraine—have further inflated prices. Although a moderate price easing is anticipated beyond 2025, the long-term outlook remains volatile due to ongoing climate risks and sustained demand growth, especially in emerging markets (e.g., China, India).<sup>5</sup><side-note>4 — TODO: make a graph with the evolution of <a href="https://www.macrotrends.net/2535/coffee-prices-historical-chart-data">coffee prices</a> between 2010 and 2025. With a vertical line for the COVID-19 pandemic.</side-note><side-note>5 — Amrouk EM & al (2024). *Global coffee market and recent
+price developments*. FAO <a href="https://openknowledge.fao.org/items/b7f6d358-01b9-4545-876f-962382d71af9">Source</a></side-note>
+
+Of course, specialty coffee isn't immune to these challenges: roasters and farmers have to face rising production, labor, and living costs, and profound changes and investments will be necessary to tackle climate change. But by prioritizing quality over quantity, specialty coffee supports more sustainable practices and encourages a healthier market dynamic, benefiting farmers, consumers, and the environment alike. And I believe that worths paying a bit more for a cup of coffee.
 
 ### Health impacts
 
 <Asterism />
 
-If caffeine was once feared and wrongly blamed for a range of health issues, over the past two decades, scientific research has brought a major shift in how coffee is viewed nutritionally.
+In addition to being economically and environmentally sustainable, coffee must also be safe for us. And if caffeine was once feared and wrongly blamed for a range of health issues, over the past two decades, scientific research has brought a major shift in how coffee is viewed nutritionally.
 
 Large-scale studies and meta-analyses suggest that moderate coffee consumption (typically 2 to 4 cups a day) is linked to a lower risk of several chronic diseases,<sup>1</sup> including type 2 diabetes,<sup>2</sup> heart diseases,<sup>3</sup> and even some forms of cancer.<sup>4</sup> There's also growing evidence that regular coffee drinkers may have a reduced risk of neurological disorders like Parkinson's disease.<sup>5</sup>
 <side-note class="xl:-mt-60">1 — Individuals with higher coffee intake had a 14% reduction risk for all-cause mortality (95% confidence interval: 0.80-0.92) ☞ Je Y, Giovannucci E (2014). *Coffee consumption and total mortality: a meta-analysis of twenty prospective cohort studies*. Br J Nutr <a href="https://pubmed.ncbi.nlm.nih.gov/24279995/">Source</a></side-note><side-note class="xl:-mt-24">2 — Approximately 4 cups of coffee per day is associated with a 21% reduction in all-cause mortality among patients with type 2 diabetes (95% <abbr title="Confidence Interval">CI</abbr>: 0.72-0.87) ☞ Shahinfar & al (2021). *Coffee consumption and cardiovascular diseases and mortality in patients with type 2 diabetes: A systematic review and dose-response meta-analysis of cohort studies*. Nutr Metab Cardiovasc Dis <a href="https://pubmed.ncbi.nlm.nih.gov/34112583/">Source</a></side-note><side-note>3 — Approximately 3 cups of coffee or tea per day is associated with a reduced risk of cardiovascular diseases and improved survival ☞ Chieng D, Kistler PM (2022). *Coffee and tea on cardiovascular disease (CVD) prevention*. Trends Cardiovasc Med <a href="https://pubmed.ncbi.nlm.nih.gov/34384881/">Source</a></side-note><side-note>4 — Coffee consumption is not associated with an increased risk of cancer (95% <abbr title="Confidence Interval">CI</abbr>: 0.99-1.01) and it is linked to a reduced risk of specific cancers, particularly liver (95% <abbr title="Confidence Interval">CI</abbr>: 0.81-0.90) and endometrial cancer (95% <abbr title="Confidence Interval">CI</abbr>: 0.88-0.96) ☞ Alicandro G & al (2017). *Coffee and cancer risk: a summary overview*. Eur J Cancer Prev <a href="https://pubmed.ncbi.nlm.nih.gov/28288025/">Source</a></side-note><side-note>5 — Approximately 3 cups of coffee per day was linked to a 28% lower risk of developing Parkinson's disease (95% <abbr title="Confidence Interval">CI</abbr>: 0.65-0.81) ☞ Qi H, Li S (2014). *Dose-response meta-analysis on coffee, tea and caffeine consumption with risk of Parkinson's disease*. Geriatr Gerontol Int <a href="https://pubmed.ncbi.nlm.nih.gov/23879665/">Source</a></side-note>
