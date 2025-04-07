@@ -353,6 +353,48 @@ error ->
 
 This log is then sent to our <a href="https://appsignal.com/">AppSignal</a> instance, where we can track the errors and see if they are recurrent. We also have a dedicated Slack channel where we receive notifications for each error, so we can react quickly if needed. Thus, we often inform the customer success team before the user reaches out.
 
+### Testing
+
+<Asterism />
+
+A critical advantage of using behaviours is that they make testing easier and more reliable—especially when combined with [Mox](https://hexdocs.pm/mox/Mox.html), which leverages behaviours to easily mock dependencies.
+
+To integrate Mox, we first declare a mock module in our test setup:
+
+```elixir
+Mox.defmock(EncheresImmo.CrmIntegrations.CrmMock, for: EncheresImmo.CrmIntegrations.Crm)
+```
+
+Then, we inject this mock into the components we want to test. Here’s a simplified example of how we could test our `CrmJob` module:
+
+```elixir
+test "minimal import properties test", %{integration: integration} do
+	# Change the schema to match the CRM documentation, and its format
+	raw_properties = [
+	%{
+		"id" => "123",
+		"name" => "Test Property",
+		# Other fields...
+	}
+	]
+
+  # Set expectations for our mock
+  EncheresImmo.CrmIntegrations.CrmMock
+  |> expect(:get_raw_properties, fn _agency_id ->  end)
+  |> expect(:convert_property_map, fn _raw_property, _agent_id, _integration -> %Property{original_name: "Test Property"} end)
+  |> expect(:get_source_id, fn _property -> "crm_123" end)
+
+  # Inject our mock into the job
+  assert :ok = CrmJob.perform(%Oban.Job{args: %{integration_id: integration.id}}, EncheresImmo.CrmIntegrations.CrmMock)
+
+  # Then check if the property was created correctly...
+end
+```
+
+With this approach, each behaviour implementation is tested independently from the rest of the application. We don't make real <abbr title='Application Programming Interface'>API</abbr> requests or <abbr title='File Transfer Protocol'>FTP</abbr> file retrievals, meaning our tests are not only faster but also significantly more robust.
+
+This isolation is particularly beneficial for Test-Driven Development (<abbr title="Test-Driven Development">TDD</abbr>), as it allows us to define clear contracts upfront, iterate quickly, and incrementally implement and refine the corresponding modules.
+
 ## Conclusion
 
 Our world is spooky, filled with legacy systems and non-standard data structures… But our <abbr title="Customer Relationship Management">CRM</abbr> integration feature has been up and running for almost 3 years, with multiple refactors from different team members, eight different <abbr title="Customer Relationship Management">CRM</abbr>s supported, thousands of properties imported, and many happy users.
