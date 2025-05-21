@@ -15,10 +15,12 @@ import HiddenH3 from "$components/typography/HiddenH3.astro"
 import Asterism from "$components/typography/Asterism.astro"
 import GithubInline from "$components/typography/GithubInline.astro"
 import { Image } from "astro:assets"
-import FigImage from "$components/images/FigImage.astro"
 import SideImage from "$components/images/SideImage.astro"
 import CoffeePricesHistorical from "./coffee-prices-historical.png"
 import FarmerDryingCoffee from "./farmer-drying-coffee.webp"
+import GoodLabel from "./good_label.webp"
+import MidLabel from "./mid_label.webp"
+import BadLabel from "./bad_label.webp"
 export const components = {h3: HiddenH3}
 
 ## Basics of speciality coffee
@@ -62,7 +64,7 @@ Of course, specialty coffee isn't immune to these challenges: roasters and farme
 
 <Asterism />
 
-Maybe ?
+Maybe talk about the economy of roasters and coffee shops?
 
 ### Health impacts
 
@@ -79,25 +81,61 @@ Of course, coffee isn't risk-free. It can interfere with your sleep,<sup>6</sup>
 
 ## Buying coffee
 
-Blablabla.
+Blablabla. You can buy speciality coffee online, even on subscription format. It's useful if you are not in a big city, but it's also nice to go buy locally, and met your local scene.
 
-### Find a local roaster
+Specialty coffee can be buy directly from roasters, which often have a counter or a coffee shop. You can also find it in specialty coffee shops, which often sales their roasters coffee, or a selection of roasters. I avoid coffees in supermarkets or convenience stores, as they are often low-quality coffee.
+
+Look « speciality coffee » on Google Maps, and you will find a lot of shops. There is also dedicated websites, like <a href="https://europeancoffeetrip.com/">European Coffee Trip</a>, which offers a more selective list but sometimes outdated.
+
+### The good and the bad label
 
 <Asterism />
 
-Blablabla.
+Before I dig into the label, I first scan the bag for quick cues that tell me whether it's worth a closer look. For example, here what I look for:
+
+| <span class="h-2.5 w-2.5 bg-success rounded-full inline-block" /> Green flags | Description |
+|:-------------|:------------|
+| Precise origin | More than just a country, but a region, a farm, or even a lot. Indicates a transparent supply chain and a single origin coffee. |
+| Variety | Not useful for the average consumer, but indicates a transparent supply chain and a single origin coffee. |
+| Processing method | Indicates the coffee's flavor profile, and the care taken in its production. |
+| Roast date | Indicates the coffee's freshness. Industrial coffee often has a "best before" date, which is not the same. |
+| Resealable zipper | Coffe is sensitive to air, light, and moisture. A resealable zipper helps preserve freshness. |
+| Gas release valve | Freshly roasted coffee releases CO2, A gas release valve allows it to escape without letting air in. |
+| Notes | If related to fruits, flowers, deserts, dairy products, or alcohols. Indicates a clean and complex coffee. |
+
+Some cues aren't automatically good or bad, but are worth noting:
+
+| <span class="h-2.5 w-2.5 bg-warning rounded-full inline-block" /> Orange flags | Description |
+|:-------------|:------------|
+| Intensity scale | Purely subjective, and often misleading. |
+| Roast color | Somehow subjective, and often misleading. |
+| Altitudes | Useless information, and often misleading. |
+| Blends | Can be great, but often used to hide low-quality coffee. |
+| Notes | If related to chocolate, caramel, nuts, spices, or sweetness. May indicate a burnt coffee. |
+
+On the other hand, a few signals almost always make me put the bag back on the shelf:
+
+| <span class="h-2.5 w-2.5 bg-primary rounded-full inline-block" /> Red flags | Description |
+|:-------------|:------------|
+| Robusta | A low-quality coffee, often used to cut costs. |
+| Ecology or sustainability labels | Not bad in itself, but their expensive price and administrative burden make them limited to large industrial producers. |
+| Tradition | A strong marketing argument around tradition or heritage. (e.g. "since 19xx") |
+| Masculinity | A strong marketing argument around masculinity and virility.
+| Notes | If related to « dark », « intense », « strong ». Indicates a burnt and low-quality coffee. |
+
+To help you better understand, let's take a look at three labels from different roasters :<side-note class="xl:-mt-90"><SideImage src={GoodLabel} alt="Good label" markers={[ { key: "1", legend: "Resealable zipper.", color: "oklch(59.6% 0.145 163.225)", left: "50", top: "18" },{key: "2", legend: "More than just a country, the name of the farm and farmer.", color: "oklch(59.6% 0.145 163.225)", left: "46.5", top: "38.5" },{key: "3", legend: "Processing method.", color: "oklch(59.6% 0.145 163.225)", left: "30", top: "49.75" },{key: "4", legend: "Variety.", color: "oklch(59.6% 0.145 163.225)", left: "40", top: "48.5" },{key: "5", legend: "Fruit notes.", color: "oklch(59.6% 0.145 163.225)", left: "49", top: "49.75" },{key: "6", legend: "Roast date.", color: "oklch(59.6% 0.145 163.225)", left: "58.5", top: "47.5" },{key: "7", legend: "Gas release valve on the back.", color: "oklch(59.6% 0.145 163.225)", left: "95", top: "55" }]}/></side-note>
+
+The first one is from Frukt Coffee Roaster, a local speciality roaster in Turku, Finland. It checks all the green flags, from the resealable zipper to transparent supply chain, which shows the roaster's commitment to quality and sustainability. This is expected from premium speciality roasters, and you can almost always trust them to deliver a great cup of coffee.<side-note class="xl:-mt-7"><SideImage src={MidLabel} alt="Mid label" markers={[{key: "1", legend: "Resealable zipper.", color: "oklch(59.6% 0.145 163.225)", left: "50", top: "15" },{key: "2", legend: "Blend.", color: "oklch(66.6% 0.179 58.318)", left: "56", top: "74.25" },{key: "3", legend: "Chocolate and nuts notes.", color: "oklch(66.6% 0.179 58.318)", left: "52", top: "79.5" },{key: "4", legend: "A region slot, but empty?", color: "oklch(66.6% 0.179 58.318)", left: "53", top: "85" },{key: "5", legend: "Altitude.", color: "oklch(66.6% 0.179 58.318)", left: "71.5", top: "84.75" },{key: "6", legend: "Robusta.", left: "37", top: "87.75" },{key: "7", legend: "Processing method.", color: "oklch(59.6% 0.145 163.225)", left: "53", top: "90" },{key: "8", legend: "Intensity scale.", color: "oklch(66.6% 0.179 58.318)", left: "72", top: "89.5" },{key: "9", legend: "Roast date.", color: "oklch(59.6% 0.145 163.225)", left: "41", top: "93.5" },{key: "10", legend: "Gas release valve on the back.", color: "oklch(59.6% 0.145 163.225)", left: "90", top: "50" },]} /></side-note>
+
+The second one is a more complex case. It came from Coffee Lab—a local roaster in the suburbs of Toulouse, France—and clearly has a lot of orange flags, and even robusta! But we also see quality packaging (resealable zipper, gas release valve) and transparent information (roast date, processing method, region)... You're probably dealing with a decent or even good roaster, but this specific coffee in their lineup is aimed at a non-enthusiast or professional audience, which expects a more « traditional » coffee. This is more likely in the suburbs or countryside, where the speciality customer base is smaller.<side-note><SideImage src={BadLabel} alt="Bad label" markers={[ { key: "1", legend: "« Assemblage » is a blend in French.", color: "oklch(66.6% 0.179 58.318)", left: "66.25", top: "60.6" },{key: "2", legend: "Tradition marketing.", left: "64", top: "65.5" },{key: "3", legend: "Robusta.", left: "60.25", top: "68.75" },{key: "4", legend: "« robust », or any « intense » related notes.", left: "59", top: "74.75" },{key: "5", legend: "Intensity scale.", color: "oklch(66.6% 0.179 58.318)", left: "61", top: "77.5" },{key: "6", legend: "Ecology or sustainability labels.", color: "oklch(66.6% 0.179 58.318)", left: "68", top: "87" },]} /></side-note>
+
+The last one is a typical industrial coffee label in France. It has a lot of red and orange flags, but more importantly, it has no green flags. None of the information is useful to understand the coffee. It's a blend, with no origin, no processing method, and no roast date. This is a clear sign of low-quality coffee, and I would avoid it at all costs.
 
 ### How to read the label
 
 <Asterism />
 
-Green flags : Roast date; Precise origin; Notes related to fruits or flowers; resealable zipper.
-
-Red flags : Robusta. Notes related to "dark", "intense", "strong", "nuts", "cerals"; Intensity scale. A strong marketing argument around tradition or heritage.
-
-What's not useful : Altitude; Variety (ish); Roast color (ish).
-
-Blends vs single origins.
+Blablabla.
 
 Process:
 - **Washed** - Clean, bright, acidic.
@@ -119,11 +157,19 @@ About Cascara.
 
 <Asterism />
 
-Blablabla.
+Blablabla. It's cool to buy equipment from local roasters and coffee shops. Usually it's not that more expensive than Amazon... But check the prices first, some clearly are scams.
+
+Check my previous article for the basics.
+
+You don't need to buy a lot of equipment, nor fancy stuff. Good quality equipment that are simple and reliable.
 
 ## Tasting coffee
 
-Blablabla.
+Blabla. Demistify the wine pro taster.
+
+About the words. About the origins.
+
+In the end, it's about being able to put words on what you taste, both to help you understand your preferences and to share them with others.
 
 ### Tastes, aromas, and flavors
 
@@ -136,17 +182,6 @@ Together, taste and aromas form what sensory science calls « *flavours* ». B
 This complexity explains why, in specialty coffee (just like in wine tasting), we describe "notes." When we speak about notes of strawberry, caramel, or jasmine, we don't mean the coffee literally tastes exactly like those foods. Instead, we're referencing memory snapshots of those flavours, subtle reminders or echoes that our brain associates with previous tasting experiences【Chen et al., 2023】.
 
 These notes become clearer and more precise through practice. By consciously tasting and comparing different coffees regularly, your sensory vocabulary expands【Mayer et al., Specialty Coffee Association】. You become increasingly skilled at identifying subtle aromas, recalling flavour memories, and expressing your experience in words. Ultimately, developing your tasting skills is not about detecting literal tastes, but rather sharpening your ability to interpret and communicate the rich, subjective world of flavour【Chen et al., 2023.
-
-
-### Demistify the sommelier
-
-<Asterism />
-
-Demistify the wine pro taster.
-
-About the words.
-
-About the origins.
 
 ### Tasting at home
 
@@ -170,13 +205,20 @@ Reads the notes on the label, and try to find what the roaster meant.
 
 <Asterism />
 
-Blablabla.
+Blablabla. Ask roasters for their coffee shops recommendations, or look for « speciality coffee » on Google Maps.
+
+What you can order, what to expect.
+
+It's easy to speak with baristas, and they love to share their knowledge.
+
+Don't be a dick -> don't order complex stuff (one and one, V60, etc) or try to chit chat while they are on a rush.
+-> don't compare negatively with others, or don't be means if the shot is bad (happens!)
 
 ### Espresso and latte art
 
 <Asterism />
 
-Blablabla.
+Blablabla. Why espresso and latte art are hard to do at home. Why you should probably enjoy them at a coffee shop.
 
 ## Blind cupping
 
