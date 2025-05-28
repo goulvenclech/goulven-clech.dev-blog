@@ -1,0 +1,23 @@
+---
+
+---
+
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox="0 -15 100 100"
+	class="stroke-body-dark dark:stroke-body-light text-body-dark dark:text-body-light h-[50px] w-[50px]"
+	fill="none"
+	stroke-linecap="round"
+>
+	<defs>
+		<clipPath id="glassClip">
+			<rect x="30" y="10" width="40" height="50" rx="4"></rect>
+		</clipPath>
+	</defs>
+
+	<g clip-path="url(#glassClip)">
+		<slot />
+	</g>
+
+	<path d="M30 10 V60 H70 V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+</svg>

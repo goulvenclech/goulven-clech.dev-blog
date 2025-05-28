@@ -1,0 +1,23 @@
+---
+
+---
+
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox="0 5 100 100"
+	class="stroke-body-dark dark:stroke-body-light text-body-dark dark:text-body-light h-[50px] w-[50px]"
+	fill="none"
+	stroke-linecap="round"
+>
+	<defs>
+		<clipPath id="cupClipSmall">
+			<path d="M23.3 40 A26.7 26.7 0 0 0 76.7 40"></path>
+		</clipPath>
+	</defs>
+
+	<g clip-path="url(#cupClipSmall)">
+		<slot />
+	</g>
+
+	<path d="M23.3 40 A26.7 26.7 0 0 0 76.7 40" stroke="currentColor" stroke-width="2"></path>
+</svg>
