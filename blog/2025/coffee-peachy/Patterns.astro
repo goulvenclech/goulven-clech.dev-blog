@@ -1,0 +1,31 @@
+---
+/**
+ * Defines some SVG patterns used in the Coffee Peachy entry.
+ * Don't use .invisible or .hidden classes here, as they hide the patterns when used in SVGs.
+ */
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" class="absolute h-0 w-0 overflow-hidden" aria-hidden="true">
+	<defs>
+		<pattern
+			id="warning-stripes"
+			patternUnits="userSpaceOnUse"
+			width="8"
+			height="5"
+			patternTransform="rotate(45)"
+		>
+			<rect width="6" height="5" fill="var(--color-warning)"></rect>
+			<rect x="6" width="2" height="5" fill="transparent"></rect>
+		</pattern>
+		<pattern
+			id="info-stripes"
+			patternUnits="userSpaceOnUse"
+			width="5"
+			height="5"
+			patternTransform="rotate(135)"
+		>
+			<rect width="3" height="5" fill="var(--color-info)"></rect>
+			<rect x="3" width="2" height="5" fill="transparent"></rect>
+		</pattern>
+	</defs>
+</svg>
